@@ -1,0 +1,7 @@
+{
+  "name": "DreamMirror AI Kiosk",
+  "description": "An AI-powered interactive kiosk that transforms students into their future professional selves using Gemini 2.5 Flash Image technology.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
