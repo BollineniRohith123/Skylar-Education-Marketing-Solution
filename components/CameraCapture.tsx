@@ -46,11 +46,13 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
     try {
       setCameraError(null);
 
+      // Use minimal constraints to get the camera's native resolution
+      // This prevents zooming/cropping that happens when forcing specific dimensions
       const constraints: MediaStreamConstraints = {
         video: {
-          facingMode: { ideal: facing },
-          width: { ideal: 1080 },
-          height: { ideal: 1920 }
+          facingMode: facing,
+          // Don't force specific dimensions - let the camera use its native resolution
+          // This prevents the "zoomed in" effect on mobile devices
         }
       };
 
@@ -165,12 +167,18 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
 
   return (
     <div className="relative w-full h-dvh flex flex-col items-center justify-center bg-black overflow-hidden touch-none">
+      {/* 
+        Using object-contain instead of object-cover:
+        - object-cover = fills container, CROPS excess → causes zoom effect
+        - object-contain = fits inside container, shows FULL view → no zoom
+        The black bars on sides are acceptable and look like a camera viewfinder
+      */}
       <video
         ref={videoRef}
         autoPlay
         playsInline
         muted
-        className={`absolute inset-0 w-full h-full object-cover ${facingMode === 'user' ? 'transform -scale-x-100' : ''}`}
+        className={`absolute inset-0 w-full h-full object-contain ${facingMode === 'user' ? 'transform -scale-x-100' : ''}`}
       />
       <canvas ref={canvasRef} className="hidden" />
       <input
