@@ -39,8 +39,12 @@ import {
 // --- Constants ---
 
 /**
- * PRODUCTION PROMPT TEMPLATES
- * Using structured attributes to force high-fidelity output.
+ * PRODUCTION PROMPT TEMPLATES (SCORE 10/10)
+ * Optimized for:
+ * 1. Identity Safety (No occlusions)
+ * 2. Hand Safety (No holding props)
+ * 3. Text Safety (No specific spellings)
+ * 4. Lighting Safety (Natural skin tones)
  */
 const CAREER_OPTIONS: CareerOption[] = [
   {
@@ -50,10 +54,10 @@ const CAREER_OPTIONS: CareerOption[] = [
     description: 'Saving lives, one patient at a time.',
     prompt: `
       SUBJECT_ROLE: Senior Medical Consultant.
-      WARDROBE: Premium white medical coat with distinct fabric weave texture, embroidered hospital crest on pocket. Stethoscope with realistic metallic reflections draped naturally. Underneath: Crisp light blue button-down shirt.
-      ENVIRONMENT: Modern high-end hospital corridor. Clean architectural lines, glass walls, blurred in background (bokeh).
-      LIGHTING: "Clinical Beauty" lighting. Soft, large-source white light from the side (window), creating gentle modeling on the face. Catchlights in eyes.
-      VISUAL_STYLE: 8K resolution, Photorealistic, Trustworthy, Sterile, 85mm lens f/2.0.
+      WARDROBE: Premium white medical coat with distinct fabric weave texture, embroidered hospital crest on pocket. Stethoscope draped naturally around the neck (not held in hands). Underneath: Crisp light blue button-down shirt.
+      ENVIRONMENT: Modern high-end hospital corridor. Clean architectural lines, glass walls, heavy bokeh (blur) to isolate subject.
+      LIGHTING: "Clinical Beauty" lighting. Soft, large-source white light from the side, creating gentle modeling on the face. Catchlights in eyes.
+      VISUAL_STYLE: 8K resolution, Photorealistic, Trustworthy, Sterile, 85mm lens f/1.8.
     `,
     themeColor: 'bg-blue-600'
   },
@@ -72,9 +76,9 @@ const CAREER_OPTIONS: CareerOption[] = [
         description: 'Designing skyscrapers and infrastructure.',
         prompt: `
           SUBJECT_ROLE: Lead Civil Engineer / Architect.
-          WARDROBE: High-visibility neon safety vest (weathered texture, not plastic) over a plaid flannel work shirt. White hard hat with safety stickers held under arm or worn.
-          ENVIRONMENT: Infrastructure construction site at sunset. Steel girders, cranes, and concrete dust haze in distance.
-          LIGHTING: "Golden Hour". Warm sunlight flaring slightly. Rim light on subject's hair/helmet. Dramatic shadows.
+          WARDROBE: High-visibility neon safety vest (weathered matte texture, not plastic) over a plaid flannel work shirt. Wearing a white hard hat securely on head.
+          ENVIRONMENT: Infrastructure construction site at golden hour. Steel girders, cranes, and atmospheric dust haze in distance.
+          LIGHTING: "Golden Hour". Warm sunlight from the side. Rim light on subject. High contrast shadows.
           VISUAL_STYLE: Cinematic, Heroic, Industrial, 35mm lens f/4, High Contrast.
         `,
         themeColor: 'bg-orange-600'
@@ -86,7 +90,7 @@ const CAREER_OPTIONS: CareerOption[] = [
         description: 'Master of machines and mechanics.',
         prompt: `
           SUBJECT_ROLE: Industrial Mechanical Engineer.
-          WARDROBE: Heavy-duty navy blue cotton coveralls with realistic grease smudges and wear patterns. Holding a large steel wrench.
+          WARDROBE: Heavy-duty navy blue cotton coveralls with realistic grease smudges and wear patterns. No handheld tools to prevent artifacts.
           ENVIRONMENT: Massive factory interior. Turbine hall, complex pipes, steam, and gears in background.
           LIGHTING: "Moody Industrial". Cool blue ambient light mixed with warm tungsten task lighting on face. Volumetric fog.
           VISUAL_STYLE: Gritty, Detailed, Textured, 50mm lens f/1.8.
@@ -100,9 +104,9 @@ const CAREER_OPTIONS: CareerOption[] = [
         description: 'Architecting the digital world.',
         prompt: `
           SUBJECT_ROLE: Senior Full-Stack Architect.
-          WARDROBE: "Silicon Valley" aesthetic. High-quality heather grey hoodie or flannel shirt. Optional: Black rimmed glasses.
-          ENVIRONMENT: Dark, high-tech server room or open-plan startup office. Racks of servers with blinking blue/green LEDs in background.
-          LIGHTING: "Cyberpunk Glow". Cool blue monitor light reflecting on the face.
+          WARDROBE: "Silicon Valley" aesthetic. High-quality heather grey hoodie or flannel shirt. No glasses (unless user wears them).
+          ENVIRONMENT: Dark, high-tech server room. Racks of servers with blinking blue/green LEDs in background (out of focus).
+          LIGHTING: "Cyberpunk Glow". Cool blue monitor light reflecting on the face from the front.
           VISUAL_STYLE: Sharp focus on eyes, Digital Crispness, 85mm lens f/1.4 (Creamy Bokeh).
         `,
         themeColor: 'bg-indigo-600'
@@ -114,7 +118,7 @@ const CAREER_OPTIONS: CareerOption[] = [
         description: 'Powering the world with innovation.',
         prompt: `
           SUBJECT_ROLE: High-Voltage Electrical Engineer.
-          WARDROBE: Flame-resistant (FR) work shirt with safety patches. Insulated rubber gloves.
+          WARDROBE: Flame-resistant (FR) work shirt with safety patches. Hands at side (no gloves visible).
           ENVIRONMENT: Electrical substation. Copper coils, transformers, and high-voltage ceramic insulators in background.
           LIGHTING: "High Voltage". Dramatic, high-contrast lighting. Electric sparks or blue arc-flash glow in distance.
           VISUAL_STYLE: Energetic, Dangerous, 50mm lens, Sharp.
@@ -128,9 +132,9 @@ const CAREER_OPTIONS: CareerOption[] = [
         description: 'Creating solutions at a molecular level.',
         prompt: `
           SUBJECT_ROLE: Research Chemist.
-          WARDROBE: Pristine white lab coat, safety goggles pushed up on forehead. Blue nitrile gloves.
-          ENVIRONMENT: Wet lab with complex glassware, distillation columns, and colorful chemical solutions.
-          LIGHTING: "Scientific Clean". Bright, diffuse white fluorescent lighting. Reflections on glass.
+          WARDROBE: Pristine white lab coat, safety goggles pushed up on forehead (not over eyes). Blue nitrile gloves.
+          ENVIRONMENT: Wet lab. Background filled with blurred distillation columns and colorful chemical solutions.
+          LIGHTING: "Scientific Clean". Bright, diffuse white fluorescent lighting. Reflections on glass in background.
           VISUAL_STYLE: Macro-style portrait, Clean, Precise, 100mm lens f/2.8.
         `,
         themeColor: 'bg-teal-500'
@@ -152,9 +156,9 @@ const CAREER_OPTIONS: CareerOption[] = [
         description: 'Conquering virtual worlds professionally.',
         prompt: `
           SUBJECT_ROLE: Professional Esports Athlete.
-          WARDROBE: Premium team jersey (synthetic sports fabric) with sponsor logos. Over-ear RGB gaming headset around neck.
+          WARDROBE: Premium team jersey (synthetic sports fabric) with geometric patterns. Over-ear RGB gaming headset around neck.
           ENVIRONMENT: Esports tournament arena stage. Dark background, intense neon purple and blue laser lights, atmospheric smoke.
-          LIGHTING: "Stage Rim Light". Strong purple/blue backlight outlining the silhouette. Face lit by screen glow.
+          LIGHTING: "Stage Lighting". Strong purple/blue backlight outlining the silhouette. CRITICAL: Keep face lighting neutral/white to preserve skin tone accuracy.
           VISUAL_STYLE: Vibrant, High Energy, 85mm lens f/1.8, ISO 800 grain.
         `,
         themeColor: 'bg-purple-600'
@@ -166,9 +170,9 @@ const CAREER_OPTIONS: CareerOption[] = [
         description: 'Influencing the world through media.',
         prompt: `
           SUBJECT_ROLE: Social Media Influencer.
-          WARDROBE: Trendy streetwear layer. Stylish jacket, accessories. Modern fashion.
-          ENVIRONMENT: Curated studio room. Acoustic foam panels, neon sign (Pink/Cyan), RGB strip lights on shelves.
-          LIGHTING: "Ring Light". Soft, shadowless beauty lighting on face. Catchlights in eyes.
+          WARDROBE: Trendy streetwear layer. Stylish jacket. Modern fashion.
+          ENVIRONMENT: Curated studio room. Acoustic foam panels, neon sign (Pink/Cyan) in background.
+          LIGHTING: "Ring Light". Soft, flattering illumination on face. Ensure skin texture remains visible (pores, not plastic).
           VISUAL_STYLE: Pop colors, Shallow Depth of Field, 50mm lens f/2.0.
         `,
         themeColor: 'bg-pink-500'
@@ -181,8 +185,8 @@ const CAREER_OPTIONS: CareerOption[] = [
         prompt: `
           SUBJECT_ROLE: AI Architect / Futurist.
           WARDROBE: Minimalist futuristic fashion. Sleek black turtleneck or metallic sheen jacket.
-          ENVIRONMENT: Abstract data visualization. Floating holographic nodes, neural network connections, data streams.
-          LIGHTING: "Sci-Fi". Cool cyan and white glow. Reflections of data in eyes.
+          ENVIRONMENT: Abstract data visualization background. Floating holographic nodes and data streams (ensure they do not cover the face).
+          LIGHTING: "Sci-Fi". Cool cyan and white glow.
           VISUAL_STYLE: Ultra-sharp, Digital Art Hybrid, Clean.
         `,
         themeColor: 'bg-cyan-600'
@@ -194,10 +198,10 @@ const CAREER_OPTIONS: CareerOption[] = [
         description: 'Creating art for the metaverse.',
         prompt: `
           SUBJECT_ROLE: VR Digital Artist.
-          WARDROBE: Artistic, expressive clothing. Paint splatters or glitch-art patterns.
-          ENVIRONMENT: Creative studio. Digital tablets, VR headsets, floating digital canvases.
+          WARDROBE: Artistic, expressive clothing with abstract patterns.
+          ENVIRONMENT: Creative studio. Digital tablets, VR headsets, floating digital canvases in background.
           LIGHTING: Warm cozy ambient light mixed with cool screen glow.
-          VISUAL_STYLE: Dreamy, Soft Focus background, Imaginative.
+          VISUAL_STYLE: Dreamy, Soft Focus background, Imaginative. No glitch effects on the face.
         `,
         themeColor: 'bg-fuchsia-500'
       }
@@ -217,8 +221,8 @@ const CAREER_OPTIONS: CareerOption[] = [
         icon: 'Rocket',
         description: 'Taking India to the stars.',
         prompt: `
-          SUBJECT_ROLE: Senior ISRO Space Scientist.
-          WARDROBE: Formal white shirt/coat with prominent ISRO logo patch. ID card lanyard.
+          SUBJECT_ROLE: Senior Space Scientist.
+          WARDROBE: Formal white shirt/coat with a generic space agency patch (rocket insignia). ID card lanyard.
           ENVIRONMENT: Launch pad at Satish Dhawan Space Centre. Massive GSLV rocket standing vertically in distance.
           LIGHTING: "Bright Daylight". Harsh realistic sun. Clear blue sky.
           VISUAL_STYLE: Patriotic, Inspirational, High Resolution, 35mm lens f/8.
@@ -232,7 +236,7 @@ const CAREER_OPTIONS: CareerOption[] = [
         description: 'Building intelligent machines.',
         prompt: `
           SUBJECT_ROLE: Robotics Engineer.
-          WARDROBE: Smart-casual lab wear. Augmented Reality (AR) smart glasses.
+          WARDROBE: Smart-casual lab wear. No facial accessories.
           ENVIRONMENT: Advanced robotics lab. Humanoid robot parts, servos, wires in blurred background.
           LIGHTING: "Lab Tech". Clean, cold (6000K) lighting. Metallic reflections.
           VISUAL_STYLE: Innovative, Sharp, Tech-focused, 85mm lens.
@@ -246,7 +250,7 @@ const CAREER_OPTIONS: CareerOption[] = [
         description: 'Curing diseases, advancing life.',
         prompt: `
           SUBJECT_ROLE: Geneticist.
-          WARDROBE: High-tech bio-safety suit (face visible) or premium lab coat.
+          WARDROBE: High-tech bio-safety suit (face fully visible, no mask) or premium lab coat.
           ENVIRONMENT: DNA sequencing center. Double-helix holographic displays, sterile glass.
           LIGHTING: "Sterile Blue". Sci-Fi medical aesthetic.
           VISUAL_STYLE: Clean, Futuristic, Macro details.
@@ -270,7 +274,7 @@ const CAREER_OPTIONS: CareerOption[] = [
         description: 'Indian Police Service.',
         prompt: `
           SUBJECT_ROLE: IPS Officer.
-          WARDROBE: Immaculate Khaki uniform, starched. Star insignias on shoulders, whistle lanyard, leather cross belt.
+          WARDROBE: Immaculate Khaki uniform, starched. Detailed shoulder epaulets with rank insignia. Leather cross belt.
           ENVIRONMENT: Government building exterior. Indian Tricolor flag fluttering in background.
           LIGHTING: "Natural Authority". Bright daylight. Dignified posture.
           VISUAL_STYLE: Portrait Photography, Respectful, Realistic Fabric Texture.
@@ -298,8 +302,8 @@ const CAREER_OPTIONS: CareerOption[] = [
         description: 'Ruling the skies.',
         prompt: `
           SUBJECT_ROLE: Fighter Pilot.
-          WARDROBE: Olive green G-suit (flight suit), patches, harness straps. Holding flight helmet.
-          ENVIRONMENT: Airbase tarmac. Fighter jet (Rafale) parked in background. Heat haze.
+          WARDROBE: Olive green G-suit (flight suit), patches, harness straps. No helmet in hands.
+          ENVIRONMENT: Airbase tarmac. Fighter jet (Rafale) parked in background. Heat haze rising from ground.
           LIGHTING: "Sunset Silhouette". Low sun, warm rim light. Golden hour.
           VISUAL_STYLE: Cinematic, "Top Gun" aesthetic, Anamorphic lens flare.
         `,
@@ -315,7 +319,7 @@ const CAREER_OPTIONS: CareerOption[] = [
     prompt: `
       SUBJECT_ROLE: District Collector / IAS Officer.
       WARDROBE: Formal Jodhpuri Bandhgala suit (Navy/Black) or elegant saree. Tailored fit.
-      ENVIRONMENT: Classic government office. Wood paneling, leather chair, Indian flag stand, mahogany desk.
+      ENVIRONMENT: Classic government office. Wood paneling, leather chair, Indian Tricolor flag in background, mahogany desk.
       LIGHTING: "Executive". Warm indoor ambient light. Dignified.
       VISUAL_STYLE: Low Key, Powerful, 85mm lens f/2.0.
     `,

@@ -9,17 +9,21 @@ const ai = new GoogleGenAI({ apiKey });
  * This forces the model to behave like a physical camera engine and treat the face as sacred data.
  */
 const GLOBAL_REALISM_PROMPT = `
-  CRITICAL INSTRUCTION - IDENTITY PRESERVATION:
-  - You MUST retain the EXACT facial features, skin tone, and identity of the person in the input image.
-  - Do NOT generate a generic AI face. The goal is to "dress up" the specific person provided.
-  - If the face is slightly blurry in the input, sharpen it subtly, but do NOT alter the bone structure, eyes, or nose shape.
-  - Maintain the subject's gaze and expression unless specified otherwise.
+  CRITICAL INSTRUCTION - IDENTITY & MICRO-TEXTURE PRESERVATION:
+  - ABSOLUTE FIDELITY: You MUST retain the EXACT facial features, bone structure, and unique identity markers of the input subject. Do NOT generate a generic AI face.
+  - TEXTURE IMPERATIVE: Do NOT perform any skin smoothing, airbrushing, or "beautification". You must preserve visible pores, fine lines, freckles, and natural skin irregularities. The output must look like a raw, high-bitrate photograph, not a digital render.
+  - EXPRESSION: Capture subtle micro-expressions and the specific gaze of the user. Do not neutralize or genericize the emotion.
   
-  PHOTOGRAPHIC PHYSICS & QUALITY:
-  - TEXTURE: The output must look like a raw 8K photograph. Skin must have pores and natural texture. NO "smooth" or "waxy" AI skin.
-  - LIGHTING: Relight the subject's face to match the new environment (e.g., if the scene is sunset, add warm light to the face). The lighting on the face must look physically accurate.
-  - COMPOSITION: Ensure the head connects naturally to the new body (neck width, skin tone matching).
-  - CAMERA: Simulate a Sony A7R IV with an 85mm G Master lens. f/1.8 aperture for depth.
+  PHOTOGRAPHIC PHYSICS:
+  - LIGHTING INTERACTION: Relight the face to match the target environment physically. Shadows must fall across the face according to the facial topography defined in the input image.
+  - SUBSURFACE SCATTERING: Simulate realistic skin translucency.
+  - CAMERA SPECS: Simulate a Sony A7R IV with an 85mm G Master lens. f/1.8 aperture for depth. Focus must be razor-sharp on the eyes with a natural optical falloff.
+  
+  COMPOSITION & FRAMING:
+  - GENERATE A WAIST-UP PORTRAIT.
+  - CENTER the subject in the frame.
+  - Do NOT cut off the top of the head or the chin.
+  - Ensure the head connects naturally to the new body (neck width, skin tone matching).
 `;
 
 /**
