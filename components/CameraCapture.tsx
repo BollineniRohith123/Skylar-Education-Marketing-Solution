@@ -10,83 +10,95 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [stream, setStream] = useState<MediaStream | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
   const [countdown, setCountdown] = useState<number | null>(null);
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
-  const [hasMultipleCameras, setHasMultipleCameras] = useState<boolean>(false);
+  const [hasMultipleCameras, setHasMultipleCameras] = useState<boolean>(true); // Default to true on mobile
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Check if device has multiple cameras
-  useEffect(() => {
-    const checkCameras = async () => {
-      try {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
-        setHasMultipleCameras(videoDevices.length > 1);
-      } catch (err) {
-        console.error('Error checking cameras:', err);
-      }
-    };
-    checkCameras();
+  // Stop the current camera stream
+  const stopCamera = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
   }, []);
 
-  const stopCamera = useCallback(() => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      setStream(null);
-    }
-  }, [stream]);
-
+  // Start camera with specific facing mode
   const startCamera = useCallback(async (facing: 'user' | 'environment') => {
     // Stop any existing stream first
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-    }
+    stopCamera();
+    setIsLoading(true);
+    setCameraError(null);
 
     try {
-      setCameraError(null);
-
-      // Use minimal constraints to get the camera's native resolution
-      // This prevents zooming/cropping that happens when forcing specific dimensions
+      // Use 'exact' to force the specific camera on mobile devices
+      // This is critical for camera switching to work properly
       const constraints: MediaStreamConstraints = {
         video: {
-          facingMode: facing,
-          // Don't force specific dimensions - let the camera use its native resolution
-          // This prevents the "zoomed in" effect on mobile devices
-        }
+          facingMode: { exact: facing }
+        },
+        audio: false
       };
 
-      const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-      setStream(mediaStream);
+      let mediaStream: MediaStream;
+
+      try {
+        // First try with exact constraint
+        mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+      } catch (exactError) {
+        // If exact fails (common on some devices), fall back to ideal
+        console.log('Exact facingMode failed, trying ideal...', exactError);
+        const fallbackConstraints: MediaStreamConstraints = {
+          video: {
+            facingMode: { ideal: facing }
+          },
+          audio: false
+        };
+        mediaStream = await navigator.mediaDevices.getUserMedia(fallbackConstraints);
+      }
+
+      streamRef.current = mediaStream;
 
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
+        await videoRef.current.play();
       }
+
+      // Check for multiple cameras after getting permission
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevices = devices.filter(device => device.kind === 'videoinput');
+      setHasMultipleCameras(videoDevices.length > 1);
+
+      setIsLoading(false);
     } catch (err) {
       console.error("Error accessing camera:", err);
       setCameraError("Camera access denied. Please allow camera permissions or use upload.");
+      setIsLoading(false);
     }
-  }, [stream]);
+  }, [stopCamera]);
+
+  // Switch camera function
+  const switchCamera = useCallback(() => {
+    const newFacingMode = facingMode === 'user' ? 'environment' : 'user';
+    console.log('Switching camera to:', newFacingMode);
+    setFacingMode(newFacingMode);
+  }, [facingMode]);
 
   // Start camera on mount and when facingMode changes
   useEffect(() => {
     startCamera(facingMode);
 
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
+      stopCamera();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [facingMode]);
-
-  // Switch camera function
-  const switchCamera = () => {
-    const newFacingMode = facingMode === 'user' ? 'environment' : 'user';
-    setFacingMode(newFacingMode);
-  };
+  }, [facingMode, startCamera, stopCamera]);
 
   const handleCaptureClick = () => {
+    if (isLoading || cameraError) return;
+
     setCountdown(3);
     const interval = setInterval(() => {
       setCountdown(prev => {
@@ -167,6 +179,13 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
 
   return (
     <div className="relative w-full h-dvh flex flex-col items-center justify-center bg-black overflow-hidden touch-none">
+      {/* Loading indicator */}
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center z-50 bg-black">
+          <div className="text-white text-lg">Starting camera...</div>
+        </div>
+      )}
+
       {/* 
         Using object-contain instead of object-cover:
         - object-cover = fills container, CROPS excess → causes zoom effect
@@ -225,16 +244,16 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
           </p>
         </div>
 
-        {hasMultipleCameras && (
+        {hasMultipleCameras ? (
           <button
             onClick={switchCamera}
             className="p-3 rounded-full bg-black/60 backdrop-blur-md border border-white/10 active:bg-white/20 transition-all touch-manipulation"
           >
             <FlipHorizontal2 className="w-6 h-6 text-white" />
           </button>
+        ) : (
+          <div className="w-12"></div>
         )}
-
-        {!hasMultipleCameras && <div className="w-12" />} {/* Spacer for alignment */}
       </div>
 
       {/* Countdown Overlay */}
@@ -262,14 +281,13 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
               <span className="text-[10px] md:text-xs font-bold tracking-wider uppercase shadow-black drop-shadow-sm">Switch</span>
             </button>
           ) : (
-            /* Empty spacer for alignment */
             <div className="w-16 md:w-20"></div>
           )}
 
           {/* Center: Capture Button */}
           <button
             onClick={handleCaptureClick}
-            disabled={countdown !== null || !!cameraError}
+            disabled={countdown !== null || !!cameraError || isLoading}
             className="transform transition-transform active:scale-90 mx-4 touch-manipulation disabled:opacity-50"
           >
             <div className="p-1 rounded-full border-4 border-white/30">
