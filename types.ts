@@ -1,6 +1,7 @@
 export enum AppState {
   ATTRACT = 'ATTRACT',
   CAPTURE = 'CAPTURE',
+  PHOTO_REVIEW = 'PHOTO_REVIEW', // New: Review captured photo before proceeding
   SELECT_DREAM = 'SELECT_DREAM',
   PROCESSING = 'PROCESSING',
   RESULT = 'RESULT',
