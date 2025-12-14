@@ -250,7 +250,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
       <div className="absolute bottom-0 w-full pb-safe z-30 bg-gradient-to-t from-black via-black/80 to-transparent">
         <div className="pb-8 pt-12 flex justify-around items-center max-w-lg mx-auto px-6">
 
-          {/* Switch Camera Button (also in bottom for easy thumb access) */}
+          {/* Left Button: Switch Camera (or empty space if single camera) */}
           {hasMultipleCameras ? (
             <button
               onClick={switchCamera}
@@ -262,18 +262,11 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
               <span className="text-[10px] md:text-xs font-bold tracking-wider uppercase shadow-black drop-shadow-sm">Switch</span>
             </button>
           ) : (
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="flex flex-col items-center space-y-1 text-white/90 active:text-white transition-all group active:scale-95 touch-manipulation"
-            >
-              <div className="p-3 rounded-full bg-slate-800/80 backdrop-blur-md border border-white/10 group-active:bg-slate-700 shadow-lg">
-                <Upload className="w-5 h-5 md:w-6 md:h-6" />
-              </div>
-              <span className="text-[10px] md:text-xs font-bold tracking-wider uppercase shadow-black drop-shadow-sm">Upload</span>
-            </button>
+            /* Empty spacer for alignment */
+            <div className="w-16 md:w-20"></div>
           )}
 
-          {/* Capture Button */}
+          {/* Center: Capture Button */}
           <button
             onClick={handleCaptureClick}
             disabled={countdown !== null || !!cameraError}
@@ -286,7 +279,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
             </div>
           </button>
 
-          {/* Upload Button */}
+          {/* Right: Upload Button (always visible) */}
           <button
             onClick={() => fileInputRef.current?.click()}
             className="flex flex-col items-center space-y-1 text-white/90 active:text-white transition-all group active:scale-95 touch-manipulation"
