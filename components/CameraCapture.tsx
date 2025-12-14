@@ -186,7 +186,6 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
         ref={fileInputRef}
         onChange={handleFileUpload}
         accept="image/*"
-        capture="user"
         className="hidden"
       />
 
