@@ -4,67 +4,83 @@ const apiKey = process.env.API_KEY || '';
 const ai = new GoogleGenAI({ apiKey });
 
 /**
- * NATURAL DOCUMENTARY STYLE PROMPT
- * Optimized for authentic, candid workplace photos that preserve the user's exact identity.
+ * =============================================================================
+ * SIMPLIFIED GLOBAL PROMPT
+ * Based on analysis: Simple prompts produce natural face integration.
+ * Complex face preservation instructions cause "patchy" face effect.
+ * =============================================================================
  */
 const GLOBAL_REALISM_PROMPT = `
-  CRITICAL - IDENTITY PRESERVATION (HIGHEST PRIORITY):
-  - You MUST keep the person's EXACT face, facial features, bone structure, skin tone, and expression.
-  - Do NOT change, alter, or "improve" their face in any way.
-  - Do NOT smooth skin, remove blemishes, or beautify. Keep all natural skin texture, pores, freckles, and imperfections.
-  - The person in the output MUST be immediately recognizable as the same person from the input photo.
-  - If the person has glasses, facial hair, distinctive features - KEEP THEM EXACTLY.
-  
-  PHOTO STYLE - NATURAL & AUTHENTIC:
-  - This should look like a real photo taken at an actual workplace by a coworker with a regular camera or phone.
-  - Documentary-style photography. Candid and genuine, NOT a professional photoshoot.
-  - Natural and relaxed, NOT posed or staged.
-  - Think: "Real moment captured during a normal workday" NOT "Corporate headshot" or "Stock photography".
-  
-  COMPOSITION - CASUAL & NATURAL:
-  - Show the person from chest-up or waist-up in their work environment.
-  - Natural framing - can be slightly off-center, doesn't need to be perfectly composed.
-  - Include some of the background environment to show context.
-  - Don't force perfect symmetry or formal posing.
-  
-  LIGHTING - SIMPLE & REALISTIC:
-  - Use whatever lighting would naturally exist in that environment.
-  - Office: regular fluorescent or window light
-  - Outdoor: natural daylight or shade
-  - Lab/Hospital: normal interior lighting
-  - NO special photography lighting setups, NO dramatic effects.
-  
-  OVERALL FEEL:
-  - Authentic workplace moment, like a photo for a company newsletter or employee directory.
-  - Real, genuine, natural - NOT cinematic, NOT commercial, NOT artistic.
+PHOTO GUIDELINES:
+
+STYLE:
+• Create a photorealistic image - like a real photograph taken with a camera.
+• Professional movie poster or magazine quality.
+• High resolution, sharp details, natural lighting.
+• NOT cartoon, NOT anime, NOT illustrated.
+
+FACE:
+• Keep the person's face natural and clearly visible.
+• Same person from input photo, just in different clothes/setting.
+• Natural skin texture - not plastic or over-smoothed.
+
+COMPOSITION:
+• Professional portrait framing.
+• Well-lit face.
+• Appropriate background for the scene.
 `;
 
 /**
- * Uses Gemini 2.5 Flash Image to edit the user's photo.
+ * Production Configuration
+ * Temperature: 0.4 for consistency while maintaining creativity
+ * (Research shows 0.3-0.5 optimal for consistent image generation)
+ */
+const GENERATION_CONFIG = {
+  temperature: 0.4,      // Lower = more consistent results
+  topP: 0.95,           // Keep high for quality
+  topK: 40,             // Reasonable token selection
+};
+
+/**
+ * Uses Gemini 2.5 Flash Image to transform the user's photo.
+ * Production-optimized for consistent, print-ready results.
  */
 export const transformUserImage = async (
   base64Image: string,
   promptInstruction: string
 ): Promise<string> => {
+  console.log('🚀 [GEMINI-PROD] Starting image transformation...');
+  console.log('⚙️ [GEMINI-PROD] Config:', JSON.stringify(GENERATION_CONFIG));
+
   if (!apiKey) {
+    console.error('❌ [GEMINI-PROD] API Key is missing!');
     throw new Error("API Key is missing. Please set process.env.API_KEY.");
   }
+
+  const startTime = Date.now();
 
   try {
     // Remove data URL prefix
     const cleanBase64 = base64Image.replace(/^data:image\/(png|jpeg|jpg);base64,/, "");
+    console.log('📷 [GEMINI-PROD] Image size:', Math.round(cleanBase64.length / 1024), 'KB');
 
     const model = 'gemini-2.5-flash-image';
 
-    // Structure the prompt using the "Layered JSON-Logic" approach from the examples
+    // Structured prompt with clear sections
     const fullPrompt = `
-      OBJECTIVE: Create a photorealistic professional portrait of the user provided in the image.
+${GLOBAL_REALISM_PROMPT}
 
-      ${GLOBAL_REALISM_PROMPT}
+=== COSTUME & SCENE INSTRUCTIONS ===
+${promptInstruction}
 
-      SCENE & ATTIRE SPECIFICATIONS:
-      ${promptInstruction}
-    `;
+=== OUTPUT REQUIREMENTS ===
+• Create a photorealistic, print-quality portrait.
+• The person's face MUST match the input photo exactly.
+• Style: Professional costume photography / movie poster quality.
+• Resolution: High quality suitable for 4x6 or larger prints.
+`;
+
+    console.log('📝 [GEMINI-PROD] Sending request with optimized settings...');
 
     const response = await ai.models.generateContent({
       model: model,
@@ -80,23 +96,52 @@ export const transformUserImage = async (
             text: fullPrompt
           }
         ]
+      },
+      config: {
+        temperature: GENERATION_CONFIG.temperature,
+        topP: GENERATION_CONFIG.topP,
+        topK: GENERATION_CONFIG.topK,
       }
     });
 
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    console.log(`✅ [GEMINI-PROD] Response received in ${elapsed}s`);
+
     const candidates = response.candidates;
+
     if (candidates && candidates.length > 0) {
       const parts = candidates[0].content.parts;
+
       for (const part of parts) {
         if (part.inlineData && part.inlineData.data) {
+          const resultSize = Math.round(part.inlineData.data.length / 1024);
+          console.log(`🎉 [GEMINI-PROD] SUCCESS! Generated ${resultSize}KB image in ${elapsed}s`);
           return `data:image/jpeg;base64,${part.inlineData.data}`;
+        }
+        if (part.text) {
+          console.log('📝 [GEMINI-PROD] Model text response:', part.text.substring(0, 200));
         }
       }
     }
 
+    console.error('❌ [GEMINI-PROD] No image in response');
     throw new Error("No image generated by the model.");
 
-  } catch (error) {
-    console.error("Gemini Generation Error:", error);
+  } catch (error: any) {
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    console.error(`❌ [GEMINI-PROD] Error after ${elapsed}s:`, error?.message);
+
+    // Detailed error handling
+    if (error?.message?.includes('429') || error?.message?.includes('quota')) {
+      throw new Error("Rate limit exceeded. Please wait a moment and try again.");
+    }
+    if (error?.message?.includes('403')) {
+      throw new Error("API permission denied. Please check your API key.");
+    }
+    if (error?.message?.includes('400')) {
+      throw new Error("Invalid request. Please try a different photo.");
+    }
+
     throw error;
   }
 };

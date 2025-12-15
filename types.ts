@@ -1,21 +1,49 @@
 export enum AppState {
   ATTRACT = 'ATTRACT',
   CAPTURE = 'CAPTURE',
-  PHOTO_REVIEW = 'PHOTO_REVIEW', // New: Review captured photo before proceeding
+  PHOTO_REVIEW = 'PHOTO_REVIEW',
+  SELECT_CATEGORY = 'SELECT_CATEGORY', // New: Choose category (Careers, Heroes, etc.)
   SELECT_DREAM = 'SELECT_DREAM',
   PROCESSING = 'PROCESSING',
   RESULT = 'RESULT',
   LEAD_GEN = 'LEAD_GEN'
 }
 
+export type CategoryType =
+  | 'careers'
+  | 'marvel'
+  | 'dc'
+  | 'anime'
+  | 'disney_princess'
+  | 'disney_boys'
+  | 'gaming'
+  | 'fantasy'
+  | 'indian_gods'
+  | 'indian_goddesses'
+  | 'desi_heroes'
+  | 'barbie'
+  | 'doraemon';
+
 export interface CareerOption {
   id: string;
   title: string;
   icon: string;
   description: string;
-  prompt: string; // The instruction for the AI
+  prompt: string;
   themeColor: string;
   subOptions?: CareerOption[];
+}
+
+export interface CategoryGroup {
+  id: CategoryType;
+  title: string;
+  icon: string;
+  emoji?: string;           // Character emoji for visual appeal
+  characterPreview?: string; // Preview text showing sample characters
+  description: string;
+  themeColor: string;
+  bgGradient: string;
+  options: CareerOption[];
 }
 
 export interface ProcessingState {
