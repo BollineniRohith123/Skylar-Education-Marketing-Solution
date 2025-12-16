@@ -310,6 +310,110 @@ const CATEGORY_GROUPS: CategoryGroup[] = [
         themeColor: 'bg-red-600'
       }
     ]
+  },
+
+  // ========== SPORTS & GAMES ==========
+  {
+    id: 'games',
+    title: 'Sports & Games',
+    icon: 'Gamepad2',
+    emoji: '🏏',
+    characterPreview: '🏏 Cricket • ⚽ Football • ♟️ Chess',
+    description: 'Champion athlete',
+    themeColor: 'bg-green-600',
+    bgGradient: 'from-green-500 via-emerald-600 to-teal-600',
+    options: [
+      // ===== OUTDOOR SPORTS =====
+      {
+        id: 'cricket',
+        title: 'Cricket Star',
+        icon: 'Target',
+        description: 'India\'s #1 Sport',
+        prompt: `A natural portrait of the person wearing Indian cricket team blue jersey and white pants. Holding a cricket bat in a confident batting stance. Standing on a cricket pitch with a packed stadium in the background. Natural daylight with stadium lights. Champion player pose. Confident and focused expression. Authentic sports photography style. Clearly visible face matching the input.`,
+        themeColor: 'bg-blue-600'
+      },
+      {
+        id: 'football',
+        title: 'Football Player',
+        icon: 'CircleDot',
+        description: 'Goal Scorer',
+        prompt: `A natural portrait of the person wearing a professional football jersey and shorts with cleats. Standing on a green football field with a football at their feet. Stadium with crowd in background. Natural daylight. Dynamic athletic pose. Confident and energetic expression. Authentic sports photography style. Clearly visible face matching the input.`,
+        themeColor: 'bg-green-700'
+      },
+      {
+        id: 'basketball',
+        title: 'Basketball Champion',
+        icon: 'Target',
+        description: 'Slam Dunk Star',
+        prompt: `A natural portrait of the person wearing a basketball jersey and shorts. Holding a basketball in one hand with arm raised. Standing on a shiny basketball court with arena lights. Professional basketball stadium background. Dramatic lighting. Powerful athletic pose. Confident expression. Authentic sports photography style. Clearly visible face matching the input.`,
+        themeColor: 'bg-orange-600'
+      },
+      {
+        id: 'hockey',
+        title: 'Hockey Champion',
+        icon: 'Award',
+        description: 'India\'s Pride',
+        prompt: `A natural portrait of the person wearing Indian hockey team blue jersey and hockey gear. Holding a hockey stick in a ready position. Standing on an astroturf hockey field with a stadium in background. Natural daylight. Strong athletic pose. Determined expression. National sport pride. Authentic sports photography style. Clearly visible face matching the input.`,
+        themeColor: 'bg-sky-600'
+      },
+      {
+        id: 'badminton',
+        title: 'Badminton Star',
+        icon: 'Zap',
+        description: 'Smash Champion',
+        prompt: `A natural portrait of the person wearing sporty badminton attire (polo shirt and shorts). Holding a badminton racket in a smash action pose. Standing on an indoor badminton court. Bright indoor lighting. Dynamic athletic pose. Focused and confident expression. Olympic champion vibes. Authentic sports photography style. Clearly visible face matching the input.`,
+        themeColor: 'bg-purple-600'
+      },
+      {
+        id: 'kabaddi',
+        title: 'Kabaddi Warrior',
+        icon: 'Flame',
+        description: 'Pro Kabaddi Star',
+        prompt: `A natural portrait of the person wearing a sleeveless kabaddi jersey and shorts. Strong athletic build pose with arms spread. Standing on an indoor kabaddi court with Pro Kabaddi League style arena setting. Bright stadium lights. Warrior expression. Powerful and intense look. Authentic sports photography style. Clearly visible face matching the input.`,
+        themeColor: 'bg-red-600'
+      },
+      {
+        id: 'khokho',
+        title: 'Kho-Kho Player',
+        icon: 'Zap',
+        description: 'Speed Champion',
+        prompt: `A natural portrait of the person wearing a traditional kho-kho sports uniform (jersey and shorts). Athletic running pose with agile movement. Outdoor sports ground with green grass. Natural daylight. Fast and dynamic expression. Traditional Indian sports champion. Authentic sports photography style. Clearly visible face matching the input.`,
+        themeColor: 'bg-amber-600'
+      },
+      {
+        id: 'athletics',
+        title: 'Track Champion',
+        icon: 'Award',
+        description: 'Gold Medalist',
+        prompt: `A natural portrait of the person wearing athletic track and field uniform (singlet and shorts). Standing on a running track with Olympic-style stadium in background. Holding a gold medal around neck. Victory pose with arms raised. Natural sunlight. Champion expression. Celebrating a race victory. Authentic sports photography style. Clearly visible face matching the input.`,
+        themeColor: 'bg-yellow-500'
+      },
+      // ===== INDOOR GAMES =====
+      {
+        id: 'chess',
+        title: 'Chess Grandmaster',
+        icon: 'Crown',
+        description: 'Strategic Mind',
+        prompt: `A natural portrait of the person sitting at an elegant chess table with wooden chess pieces arranged. Wearing smart casual clothing (blazer or formal shirt). Hand on chin in a thoughtful grandmaster pose. Looking at the chess board with deep concentration. Soft warm lighting. Book-lined room or tournament hall in background. Intelligent and focused expression. Authentic photography style. Clearly visible face matching the input.`,
+        themeColor: 'bg-slate-700'
+      },
+      {
+        id: 'carrom',
+        title: 'Carrom Champion',
+        icon: 'Target',
+        description: 'Precision Master',
+        prompt: `A natural portrait of the person sitting at a carrom board. Wearing comfortable casual clothes. Fingers positioned to strike the striker. Carrom coins arranged on the board. Indoor home or club setting. Warm ambient lighting. Focused and skillful expression. Traditional Indian game champion. Authentic photography style. Clearly visible face matching the input.`,
+        themeColor: 'bg-amber-700'
+      },
+      {
+        id: 'tabletennis',
+        title: 'Table Tennis Pro',
+        icon: 'Zap',
+        description: 'Quick Reflexes',
+        prompt: `A natural portrait of the person wearing sporty attire (t-shirt and shorts). Holding a table tennis paddle in a ready position. Standing at a professional table tennis table. Indoor sports hall with bright lights. Dynamic athletic stance. Quick and alert expression. Competitive sports champion. Authentic sports photography style. Clearly visible face matching the input.`,
+        themeColor: 'bg-blue-500'
+      }
+    ]
   }
 ];
 
