@@ -11,18 +11,9 @@ export enum AppState {
 
 export type CategoryType =
   | 'careers'
-  | 'marvel'
-  | 'dc'
-  | 'anime'
-  | 'disney_princess'
-  | 'disney_boys'
-  | 'gaming'
   | 'fantasy'
-  | 'indian_gods'
-  | 'indian_goddesses'
-  | 'desi_heroes'
-  | 'barbie'
-  | 'doraemon';
+  | 'dolls'
+  | 'devotional';
 
 export interface CareerOption {
   id: string;

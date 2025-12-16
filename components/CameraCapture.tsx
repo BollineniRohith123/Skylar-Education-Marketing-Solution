@@ -34,59 +34,37 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
     setCameraError(null);
 
     try {
-      // Try different constraint approaches for maximum compatibility
-      let mediaStream: MediaStream | null = null;
+      // Use 'exact' to force the specific camera on mobile devices
+      // This is critical for camera switching to work properly
+      const constraints: MediaStreamConstraints = {
+        video: {
+          facingMode: { exact: facing }
+        },
+        audio: false
+      };
 
-      // Approach 1: Try with 'exact' facingMode (best for camera switching)
+      let mediaStream: MediaStream;
+
       try {
-        mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { exact: facing } },
+        // First try with exact constraint
+        mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+      } catch (exactError) {
+        // If exact fails (common on some devices), fall back to ideal
+        console.log('Exact facingMode failed, trying ideal...', exactError);
+        const fallbackConstraints: MediaStreamConstraints = {
+          video: {
+            facingMode: { ideal: facing }
+          },
           audio: false
-        });
-      } catch (e1) {
-        console.log('Exact facingMode failed, trying ideal...', e1);
-      }
-
-      // Approach 2: Try with 'ideal' facingMode
-      if (!mediaStream) {
-        try {
-          mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { ideal: facing } },
-            audio: false
-          });
-        } catch (e2) {
-          console.log('Ideal facingMode failed, trying basic...', e2);
-        }
-      }
-
-      // Approach 3: Try with just facingMode string
-      if (!mediaStream) {
-        try {
-          mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: facing },
-            audio: false
-          });
-        } catch (e3) {
-          console.log('Basic facingMode failed, trying any camera...', e3);
-        }
-      }
-
-      // Approach 4: Last resort - just get any video
-      if (!mediaStream) {
-        mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: false
-        });
+        };
+        mediaStream = await navigator.mediaDevices.getUserMedia(fallbackConstraints);
       }
 
       streamRef.current = mediaStream;
 
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
-        // Don't await play() - let it happen asynchronously to avoid autoplay errors
-        videoRef.current.play().catch(playError => {
-          console.log('Video autoplay issue (usually fine):', playError);
-        });
+        await videoRef.current.play();
       }
 
       // Check for multiple cameras after getting permission
@@ -94,8 +72,6 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
       const videoDevices = devices.filter(device => device.kind === 'videoinput');
       setHasMultipleCameras(videoDevices.length > 1);
 
-      // SUCCESS - clear any errors and loading
-      setCameraError(null);
       setIsLoading(false);
     } catch (err) {
       console.error("Error accessing camera:", err);
@@ -156,8 +132,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
 
         const imageSrc = canvas.toDataURL('image/jpeg', 0.9);
         stopCamera();
-        // Defer the state update to avoid React warning about setState during render
-        setTimeout(() => onCapture(imageSrc), 0);
+        onCapture(imageSrc);
       }
     }
   };
@@ -193,8 +168,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
 
             const normalizedImage = canvas.toDataURL('image/jpeg', 0.9);
             stopCamera();
-            // Defer the state update to avoid React warning about setState during render
-            setTimeout(() => onCapture(normalizedImage), 0);
+            onCapture(normalizedImage);
           }
         };
         img.src = e.target?.result as string;
