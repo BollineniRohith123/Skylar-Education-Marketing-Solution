@@ -414,6 +414,114 @@ const CATEGORY_GROUPS: CategoryGroup[] = [
         themeColor: 'bg-blue-500'
       }
     ]
+  },
+
+  // ========== FAMILY GROUP PHOTOS ==========
+  {
+    id: 'family',
+    title: 'Family Photos',
+    icon: 'Users',
+    emoji: '👨‍👩‍👧‍👦',
+    characterPreview: '👨‍⚕️ Medical Team • 👑 Royal Family',
+    description: 'Group memories',
+    themeColor: 'bg-rose-600',
+    bgGradient: 'from-rose-500 via-pink-600 to-fuchsia-600',
+    options: [
+      {
+        id: 'family_doctors',
+        title: 'Medical Team',
+        icon: 'Stethoscope',
+        description: 'Family of Doctors',
+        prompt: `A professional group portrait of the family members wearing white medical lab coats with stethoscopes. Standing together in a modern hospital hallway. Natural lighting. Each person has a caring and professional expression. United as a medical team. Authentic professional photography style. All faces clearly visible and matching the input photo exactly.`,
+        themeColor: 'bg-blue-600'
+      },
+      {
+        id: 'family_superheroes',
+        title: 'Superhero Family',
+        icon: 'Zap',
+        description: 'Avengers Style',
+        prompt: `A heroic group portrait of the family members as a superhero team. Each wearing unique colorful superhero costumes with capes. Standing together in a powerful team pose. City skyline in background. Dramatic golden hour lighting. Confident and brave expressions. Epic superhero team vibes. Authentic cosplay photography style. All faces clearly visible and matching the input photo exactly.`,
+        themeColor: 'bg-red-600'
+      },
+      {
+        id: 'family_royal',
+        title: 'Royal Family',
+        icon: 'Crown',
+        description: 'King, Queen & More',
+        prompt: `A majestic group portrait of the family as royalty. Wearing elegant royal attire - robes, gowns, and crowns. Standing in a grand palace hall with golden decorations. Regal and dignified poses. Warm ambient lighting. Noble and graceful expressions. Royal family portrait style. Authentic photography. All faces clearly visible and matching the input photo exactly.`,
+        themeColor: 'bg-purple-700'
+      },
+      {
+        id: 'family_sports',
+        title: 'Sports Team',
+        icon: 'Award',
+        description: 'Champion Family',
+        prompt: `A victorious group portrait of the family as a sports team. Wearing matching sports jerseys and athletic gear. Holding a trophy together. Stadium background with cheering crowd. Bright stadium lighting. Celebrating and joyful expressions. Champion team vibes. Authentic sports photography style. All faces clearly visible and matching the input photo exactly.`,
+        themeColor: 'bg-green-600'
+      },
+      {
+        id: 'family_pilots',
+        title: 'Pilot Crew',
+        icon: 'Plane',
+        description: 'Aviation Family',
+        prompt: `A professional group portrait of the family as an aviation crew. Wearing pilot uniforms with captain hats and flight attendant attire. Standing in front of an airplane. Airport terminal in background. Clear daylight. Confident and professional expressions. Aviation family dream. Authentic photography style. All faces clearly visible and matching the input photo exactly.`,
+        themeColor: 'bg-sky-700'
+      }
+    ]
+  },
+
+  // ========== FRIENDS GROUP PHOTOS ==========
+  {
+    id: 'friends',
+    title: 'Friends Squad',
+    icon: 'Users',
+    emoji: '👯',
+    characterPreview: '👨‍⚕️ Doctor Squad • 🏏 Cricket Team',
+    description: 'Squad goals',
+    themeColor: 'bg-violet-600',
+    bgGradient: 'from-violet-500 via-purple-600 to-indigo-600',
+    options: [
+      {
+        id: 'friends_doctors',
+        title: 'Doctor Squad',
+        icon: 'Stethoscope',
+        description: 'Medical Best Friends',
+        prompt: `A professional group portrait of best friends as doctors. All wearing white medical lab coats with stethoscopes. Standing together in a modern hospital. Friendly and confident expressions. Team of young doctors ready to save lives. Bright natural lighting. Authentic professional photography style. All faces clearly visible and matching the input photo exactly.`,
+        themeColor: 'bg-teal-600'
+      },
+      {
+        id: 'friends_cricket',
+        title: 'Cricket Team',
+        icon: 'Target',
+        description: '3 Batsmen Together',
+        prompt: `A dynamic group portrait of best friends as cricket players. Wearing Indian cricket team blue jerseys. Holding cricket bats together in victory pose. Standing on a cricket pitch with packed stadium behind. Natural daylight. Celebrating a match victory. Champion team pose. Authentic sports photography style. All faces clearly visible and matching the input photo exactly.`,
+        themeColor: 'bg-blue-700'
+      },
+      {
+        id: 'friends_dance',
+        title: 'Dance Squad',
+        icon: 'Music',
+        description: 'Dance Crew',
+        prompt: `A vibrant group portrait of best friends as a dance squad. Wearing trendy streetwear dance outfits. Dynamic dance poses together. Colorful stage with neon lights in background. Energetic and confident expressions. Hip-hop dance crew vibes. Dramatic stage lighting. Authentic performance photography style. All faces clearly visible and matching the input photo exactly.`,
+        themeColor: 'bg-pink-600'
+      },
+      {
+        id: 'friends_superheroes',
+        title: 'Hero Squad',
+        icon: 'Shield',
+        description: 'Superhero Team',
+        prompt: `An epic group portrait of best friends as a superhero team. Each wearing unique superhero costumes in different colors. Standing in powerful team formation. City rooftop at sunset. Dramatic heroic lighting. Brave and confident expressions. Ready to save the world together. Authentic cosplay photography style. All faces clearly visible and matching the input photo exactly.`,
+        themeColor: 'bg-red-700'
+      },
+      {
+        id: 'friends_band',
+        title: 'Music Band',
+        icon: 'Music',
+        description: 'Rock Stars',
+        prompt: `A cool group portrait of best friends as a music band. Wearing rock band outfits - leather jackets, band t-shirts. Holding musical instruments - guitars, drums, microphone. Concert stage with spotlights in background. Dramatic stage lighting. Rock star expressions. Famous band vibes. Authentic music photography style. All faces clearly visible and matching the input photo exactly.`,
+        themeColor: 'bg-slate-800'
+      }
+    ]
   }
 ];
 

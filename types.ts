@@ -14,7 +14,9 @@ export type CategoryType =
   | 'fantasy'
   | 'dolls'
   | 'devotional'
-  | 'games';
+  | 'games'
+  | 'family'
+  | 'friends';
 
 export interface CareerOption {
   id: string;
