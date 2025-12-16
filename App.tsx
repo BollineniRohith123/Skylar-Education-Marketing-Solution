@@ -214,7 +214,7 @@ const CATEGORY_GROUPS: CategoryGroup[] = [
         title: 'Hulk',
         icon: 'Mountain',
         description: 'Incredible Power',
-        prompt: `A realistic photo of the person as a strong Hulk superhero. Wearing clean, high-quality purple superhero shorts. Posing with distinct muscles and power. Green gamma energy glowing around the hands. Standing in a dramatic rocky landscape. Heroic, confident, and fun vibe. Natural lighting. High quality photography. Your face must be clearly visible, happy, and matching the input photo exactly.`,
+        prompt: `A realistic photo of the person with an enhanced muscular physique. Keep the person's natural skin color unchanged. Wearing a casual purple or dark colored t-shirt (not torn, completely intact). Strong muscular arms and athletic build. Clenched fists with bright green glowing gamma energy swirling around both hands. Standing confidently against a dramatic rocky outdoor landscape background. Natural daylight. Heroic power pose with arms slightly spread. Confident and powerful expression. High quality photography. The face must be perfectly preserved, clearly visible, natural, and matching the input photo exactly. Suitable for all ages.`,
         themeColor: 'bg-green-700'
       },
       {
