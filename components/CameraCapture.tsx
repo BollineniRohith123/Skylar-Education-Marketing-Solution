@@ -34,48 +34,49 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onBack }) => {
     setCameraError(null);
 
     try {
-      // Use 'exact' to force the specific camera on mobile devices
-      // This is critical for camera switching to work properly
+      // Use 'ideal' constraint which is more robust than 'exact'
+      // forcing 'exact' often causes OverconstrainedError on some devices
       const constraints: MediaStreamConstraints = {
         video: {
-          facingMode: { exact: facing }
+          facingMode: { ideal: facing },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
         },
         audio: false
       };
 
-      let mediaStream: MediaStream;
-
-      try {
-        // First try with exact constraint
-        mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-      } catch (exactError) {
-        // If exact fails (common on some devices), fall back to ideal
-        console.log('Exact facingMode failed, trying ideal...', exactError);
-        const fallbackConstraints: MediaStreamConstraints = {
-          video: {
-            facingMode: { ideal: facing }
-          },
-          audio: false
-        };
-        mediaStream = await navigator.mediaDevices.getUserMedia(fallbackConstraints);
-      }
-
+      const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
       streamRef.current = mediaStream;
 
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
-        await videoRef.current.play();
+        try {
+          await videoRef.current.play();
+        } catch (playError) {
+          // Ignore AbortError which happens when play() is interrupted by a new load
+          if (playError.name !== 'AbortError') {
+            console.error("Video play failed:", playError);
+          }
+        }
       }
 
       // Check for multiple cameras after getting permission
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      const videoDevices = devices.filter(device => device.kind === 'videoinput');
-      setHasMultipleCameras(videoDevices.length > 1);
+      // This is safe to run even if enumerateDevices fails
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        setHasMultipleCameras(videoDevices.length > 1);
+      } catch (e) {
+        console.warn('Could not enumerate devices:', e);
+      }
 
       setIsLoading(false);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error accessing camera:", err);
-      setCameraError("Camera access denied. Please allow camera permissions or use upload.");
+      // Don't show error for AbortError as it's usually benign (user switched cam fast)
+      if (err.name !== 'AbortError') {
+        setCameraError("Camera access issue. Please try switching modes or use upload.");
+      }
       setIsLoading(false);
     }
   }, [stopCamera]);

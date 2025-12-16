@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppState, CareerOption } from './types';
+import { AppState, CareerOption, CategoryGroup, CategoryType } from './types';
 import AttractScreen from './components/AttractScreen';
 import CameraCapture from './components/CameraCapture';
 import ProcessingView from './components/ProcessingView';
@@ -8,15 +8,12 @@ import {
   Stethoscope,
   HardHat,
   Gavel,
-  GraduationCap,
   Briefcase,
   ArrowLeft,
   Download,
-  Share2,
   RefreshCcw,
   Wand2,
   Sparkles,
-  CheckCircle,
   Code,
   Zap,
   FlaskConical,
@@ -28,7 +25,6 @@ import {
   Award,
   Cpu,
   Target,
-  LayoutGrid,
   Wrench,
   Gamepad2,
   Video,
@@ -37,234 +33,311 @@ import {
   Printer,
   Camera,
   ThumbsUp,
-  RotateCcw
+  RotateCcw,
+  Crown,
+  Sword,
+  Flame,
+  Star,
+  Heart,
+  Music,
+  Snowflake,
+  Sun,
+  Moon,
+  Cat,
+  Fish,
+  Bug,
+  Leaf,
+  Mountain,
+  Waves,
+  Gem,
+  Anchor,
+  Book,
+  Users,
+  Flower2,
+  CircleDot,
+  Feather
 } from 'lucide-react';
 
-// --- Constants ---
+// ============================================
+// ALL CATEGORY DATA - COMPLETE ECOSYSTEM
+// ============================================
 
-/**
- * PRODUCTION PROMPT TEMPLATES (SCORE 10/10)
- * Optimized for:
- * 1. Identity Safety (No occlusions)
- * 2. Hand Safety (No holding props)
- * 3. Text Safety (No specific spellings)
- * 4. Lighting Safety (Natural skin tones)
- */
-const CAREER_OPTIONS: CareerOption[] = [
+const CATEGORY_GROUPS: CategoryGroup[] = [
+  // ========== DREAM CAREERS ==========
   {
-    id: 'doctor',
-    title: 'Doctor',
-    icon: 'Stethoscope',
-    description: 'Saving lives, one patient at a time.',
-    prompt: `A doctor wearing a white medical coat with a stethoscope around their neck. Standing in a hospital hallway. Natural hospital lighting. Simple background. Casual workplace photo that looks real and authentic.`,
-    themeColor: 'bg-blue-600'
-  },
-  {
-    id: 'engineer',
-    title: 'Engineer',
-    icon: 'HardHat',
-    description: 'Building the future. Select your field.',
-    prompt: '', // Container
-    themeColor: 'bg-orange-500',
-    subOptions: [
+    id: 'careers',
+    title: 'Dream Careers',
+    icon: 'Briefcase',
+    emoji: '👔',
+    characterPreview: '👨‍⚕️ Doctor • 👮 Police • ⚖️ Lawyer',
+    description: 'Future profession',
+    themeColor: 'bg-blue-600',
+    bgGradient: 'from-blue-500 via-indigo-600 to-violet-600',
+    options: [
+
       {
         id: 'civil_engineer',
         title: 'Civil Engineer',
         icon: 'HardHat',
-        description: 'Designing skyscrapers and infrastructure.',
-        prompt: `An engineer at a construction site wearing a yellow safety vest and white hard hat. Construction equipment visible in the background. Outdoor workday photo. Natural daylight. Looks like a real photo taken during work.`,
+        description: 'Building infrastructure',
+        prompt: `A natural portrait of the person wearing a white hard hat and yellow safety vest over casual clothes. Standing outdoors at a construction site with cranes in background. Natural sunlight. Holding a rolled blueprint. Authentic professional look. clearly visible face matching the input.`,
         themeColor: 'bg-orange-600'
       },
       {
         id: 'mechanical_engineer',
         title: 'Mechanical Engineer',
         icon: 'Wrench',
-        description: 'Master of machines and mechanics.',
-        prompt: `A mechanical engineer in navy blue work coveralls at a factory. Industrial equipment in the background. Normal factory lighting. Authentic workplace moment.`,
+        description: 'Machines & Systems',
+        prompt: `A natural portrait of the person wearing blue mechanical coveralls or shop coat. Holding a wrench or tablet. Standing in a clean modern factory floor with machinery in background. Natural industrial lighting. Authentic professional look. clearly visible face matching the input.`,
         themeColor: 'bg-slate-600'
       },
       {
-        id: 'software_engineer',
-        title: 'Software Engineer',
-        icon: 'Code',
-        description: 'Architecting the digital world.',
-        prompt: `A software developer at a desk with computer monitors. Office setting with tech equipment in background. Monitor glow provides soft lighting. Natural indoor photo. Casual work environment.`,
+        id: 'robotics_engineer',
+        title: 'Robotics Engineer',
+        icon: 'Bot',
+        description: 'Future Tech',
+        prompt: `A natural portrait of the person wearing a lab coat or smart casual tech wear. Standing in a high-tech robotics lab next to a robot arm. Holding a tablet controller. Soft modern lab lighting. Authentic innovator look. clearly visible face matching the input.`,
+        themeColor: 'bg-cyan-600'
+      },
+      {
+        id: 'ai_engineer',
+        title: 'AI Engineer',
+        icon: 'Cpu',
+        description: 'Artificial Intelligence',
+        prompt: `A natural portrait of the person wearing smart casual hoodie or blazer. Sitting at a high-tech setup with multiple code screens displaying blue data streams. Modern office background. Cinematic office lighting. Intelligent focused look. clearly visible face matching the input.`,
         themeColor: 'bg-indigo-600'
       },
       {
         id: 'electrical_engineer',
         title: 'Electrical Engineer',
         icon: 'Zap',
-        description: 'Powering the world with innovation.',
-        prompt: `An electrical engineer in work clothes at an electrical facility. Equipment and control panels in background. Regular workplace lighting. Genuine work photo.`,
-        themeColor: 'bg-yellow-500'
+        description: 'Power & Energy',
+        prompt: `A natural portrait of the person wearing a safety helmet and insulated work gear. Standing near high-tech electrical panels or a solar farm. Holding a multimeter. Natural outdoor or industrial lighting. Competent professional look. clearly visible face matching the input.`,
+        themeColor: 'bg-yellow-600'
       },
       {
         id: 'chemical_engineer',
         title: 'Chemical Engineer',
         icon: 'FlaskConical',
-        description: 'Creating solutions at a molecular level.',
-        prompt: `A chemist wearing a white lab coat in a laboratory. Lab equipment and glassware visible in background. Normal lab fluorescent lighting. Real workplace photo.`,
-        themeColor: 'bg-teal-500'
-      }
-    ]
-  },
-  {
-    id: 'new_age',
-    title: 'Gen Z & Tech',
-    icon: 'Gamepad2',
-    description: 'New age careers for the digital generation.',
-    prompt: '',
-    themeColor: 'bg-purple-500',
-    subOptions: [
-      {
-        id: 'pro_gamer',
-        title: 'Esports Gamer',
-        icon: 'Gamepad2',
-        description: 'Conquering virtual worlds professionally.',
-        prompt: `A professional gamer wearing a team jersey with a gaming headset around their neck. Gaming setup with monitors and RGB lighting in background. Indoor room lighting. Casual photo like a team member would take.`,
-        themeColor: 'bg-purple-600'
+        description: 'Science & Innovation',
+        prompt: `A natural portrait of the person wearing a white lab coat and safety glasses (on forehead). Holding a test tube or clipboard. Standing in a modern chemistry lab with glassware. Bright clean lab lighting. Scientific expert look. clearly visible face matching the input.`,
+        themeColor: 'bg-teal-600'
       },
       {
-        id: 'content_creator',
-        title: 'Content Creator',
-        icon: 'Video',
-        description: 'Influencing the world through media.',
-        prompt: `A content creator in trendy casual clothing in a home studio. Ring light and camera equipment visible. Soft indoor lighting. Natural photo of someone in their creative space.`,
-        themeColor: 'bg-pink-500'
+        id: 'doctor',
+        title: 'Doctor',
+        icon: 'Stethoscope',
+        description: 'Saving lives',
+        prompt: `A natural portrait of the person wearing a white medical lab coat with a stethoscope around their neck. Standing in a well-lit hospital hallway. Professional and kind expression. Realistic photography style. clearly visible face matching the input.`,
+        themeColor: 'bg-blue-600'
       },
       {
-        id: 'ai_architect',
-        title: 'AI Architect',
-        icon: 'Bot',
-        description: 'Building the mind of the future.',
-        prompt: `A tech professional in modern casual office wear (black turtleneck or hoodie). Office with computer screens showing code or data. Natural office lighting. Contemporary workplace photo.`,
-        themeColor: 'bg-cyan-600'
+        id: 'lawyer',
+        title: 'Lawyer',
+        icon: 'Gavel',
+        description: 'Justice & Law',
+        prompt: `A natural portrait of the person wearing a traditional black lawyer's gown and white neckband. Standing in a law library with books in the background. Natural indoor lighting. Professional and dignified pose. Authentic look. clearly visible face matching the input.`,
+        themeColor: 'bg-slate-800'
       },
       {
-        id: 'digital_artist',
-        title: 'Digital Artist',
-        icon: 'Palette',
-        description: 'Creating art for the metaverse.',
-        prompt: `A digital artist in creative, expressive clothing at a desk with drawing tablet and monitors. Art studio environment. Soft ambient lighting from screens and lamps. Authentic creative workspace photo.`,
-        themeColor: 'bg-fuchsia-500'
-      }
-    ]
-  },
-  {
-    id: 'scientist',
-    title: 'Scientist',
-    icon: 'Microscope',
-    description: 'Discovering the unknown boundaries.',
-    prompt: '', // Container
-    themeColor: 'bg-indigo-600',
-    subOptions: [
-      {
-        id: 'isro_scientist',
-        title: 'ISRO Scientist',
-        icon: 'Rocket',
-        description: 'Taking India to the stars.',
-        prompt: `A space scientist wearing formal attire with an ID lanyard. Space center or control room in background. Indoor fluorescent lighting. Professional workplace photo that looks genuine.`,
-        themeColor: 'bg-blue-700'
+        id: 'ca',
+        title: 'Chartered Accountant',
+        icon: 'TrendingUp',
+        description: 'Financial expert',
+        prompt: `A natural portrait of the person wearing a sharp business suit. Sitting at a modern office desk with a laptop. City view in background. Natural office lighting. Professional and successful look. Authentic look. clearly visible face matching the input.`,
+        themeColor: 'bg-emerald-700'
       },
       {
-        id: 'robotics_scientist',
-        title: 'Robotics Scientist',
-        icon: 'Cpu',
-        description: 'Building intelligent machines.',
-        prompt: `A robotics engineer in smart-casual lab wear. Robotics lab with equipment in background. Normal lab lighting. Real research facility photo.`,
-        themeColor: 'bg-violet-600'
-      },
-      {
-        id: 'bio_scientist',
-        title: 'Bio-Medical Scientist',
-        icon: 'FlaskConical',
-        description: 'Curing diseases, advancing life.',
-        prompt: `A scientist in a white lab coat in a modern laboratory. Medical and research equipment in background. Clean lab lighting. Authentic research environment photo.`,
-        themeColor: 'bg-emerald-600'
-      }
-    ]
-  },
-  {
-    id: 'uniform_services',
-    title: 'Police & Defence',
-    icon: 'Shield',
-    description: 'Serving the nation with pride.',
-    prompt: '', // Container
-    themeColor: 'bg-emerald-800',
-    subOptions: [
-      {
-        id: 'ips_officer',
-        title: 'IPS Officer',
-        icon: 'Award',
-        description: 'Indian Police Service.',
-        prompt: `An IPS officer in official khaki uniform. Government building or office in background. Natural daylight. Official workplace photo that looks real and respectful.`,
+        id: 'police',
+        title: 'Police Officer',
+        icon: 'Shield',
+        description: 'Protecting serve',
+        prompt: `A natural portrait of the person wearing a khaki police uniform with badges. Standing outdoors on a city street. Natural daylight. Brave and responsible posture. Authentic look. clearly visible face matching the input.`,
         themeColor: 'bg-yellow-700'
       },
       {
-        id: 'army_officer',
-        title: 'Indian Army',
-        icon: 'Target',
-        description: 'Defending the borders.',
-        prompt: `An army officer in camouflage combat uniform and beret. Outdoor military setting. Natural outdoor lighting. Genuine military workplace photo.`,
-        themeColor: 'bg-green-800'
-      },
-      {
-        id: 'pilot',
-        title: 'Air Force Pilot',
-        icon: 'Plane',
-        description: 'Ruling the skies.',
-        prompt: `A fighter pilot in olive green flight suit. Aircraft or airbase in background. Outdoor lighting. Real airbase photo that looks authentic.`,
-        themeColor: 'bg-sky-700'
+        id: 'ias',
+        title: 'IAS Officer',
+        icon: 'Award',
+        description: 'District Magistrate',
+        prompt: `A natural portrait of the person wearing formal official clothes (suit or formal traditional wear). Standing in a government office with an Indian flag in the background. Dignified and authoritative. Realistic photography style. clearly visible face matching the input.`,
+        themeColor: 'bg-indigo-800'
       }
     ]
   },
+
+  // ========== FANTASY HEROES ==========
   {
-    id: 'ias',
-    title: 'IAS Officer',
-    icon: 'Briefcase',
-    description: 'Leading the nation with integrity.',
-    prompt: `An IAS officer in formal Indian attire (Bandhgala or elegant professional wear). Government office with Indian flag visible. Indoor office lighting. Dignified workplace photo.`,
-    themeColor: 'bg-yellow-600'
+    id: 'fantasy',
+    title: 'Fantasy Heroes',
+    icon: 'Zap',
+    emoji: '🦸',
+    characterPreview: '🕷️ Spidey • ⚡ Thor • 🦇 Batman',
+    description: 'Superheroes',
+    themeColor: 'bg-red-600',
+    bgGradient: 'from-red-600 via-rose-600 to-orange-500',
+    options: [
+      {
+        id: 'spiderman',
+        title: 'Spider-Man',
+        icon: 'Bug',
+        description: 'Friendly neighborhood',
+        prompt: `A realistic photo of the person wearing a high-quality red and blue spider-hero costume suit. The mask is removed and held in their hand, showing their face clearly. Sitting on a rooftop ledge. Warm sunset lighting. Friendly and heroic vibe. Authentic cosplay style. Your face must be clearly visible, natural, and matching the input photo exactly.`,
+        themeColor: 'bg-red-600'
+      },
+      {
+        id: 'superman',
+        title: 'Superman',
+        icon: 'Sun',
+        description: 'Man of Steel',
+        prompt: `A realistic photo of the person wearing a blue superhero shirt with a red 'S' symbol and a flowing red cape. Standing proudly against a blue sky. Hands on hips in a brave pose. Natural daylight. Authentic cosplay style. Your face must be clearly visible, confident, and matching the input photo exactly.`,
+        themeColor: 'bg-blue-700'
+      },
+      {
+        id: 'ironman',
+        title: 'Iron Man',
+        icon: 'Cpu',
+        description: 'Tech Genius',
+        prompt: `A realistic photo of the person wearing a high-tech red and gold mechanical suit armor. The helmet is OFF, revealing the face clearly. Glowing blue arc reactor in chest. Standing in a modern tech lab. Cool blue lighting. Confident and smart look. Authentic cosplay style. Your face must be clearly visible and matching the input photo exactly.`,
+        themeColor: 'bg-yellow-600'
+      },
+      {
+        id: 'batman',
+        title: 'Batman',
+        icon: 'Moon',
+        description: 'Dark Knight',
+        prompt: `A realistic photo of the person wearing a detailed black superhero armor suit with a cape. The cowl/mask is DOWN around the neck, showing the face clearly. Standing on a balcony at night with city lights behind. Dramatic but clear lighting. Serious and brave hero look. Authentic cosplay style. Your face must be clearly visible and matching the input photo exactly.`,
+        themeColor: 'bg-slate-900'
+      },
+      {
+        id: 'hulk',
+        title: 'Hulk',
+        icon: 'Mountain',
+        description: 'Incredible Power',
+        prompt: `A realistic photo of the person as a strong Hulk superhero. Wearing clean, high-quality purple superhero shorts. Posing with distinct muscles and power. Green gamma energy glowing around the hands. Standing in a dramatic rocky landscape. Heroic, confident, and fun vibe. Natural lighting. High quality photography. Your face must be clearly visible, happy, and matching the input photo exactly.`,
+        themeColor: 'bg-green-700'
+      },
+      {
+        id: 'thor',
+        title: 'Thor',
+        icon: 'Zap',
+        description: 'God of Thunder',
+        prompt: `A realistic photo of the person as the mighty Thunder Hero. Wearing detailed silver armor and a flowing red cape. Holding a mystical hammer (Mjolnir) raised high. Blue lightning sparks in the background (not on face). Standing on a mountain top. Brave and royal pose. Authentic cosplay style. Your face must be clearly visible, natural, and matching the input photo exactly.`,
+        themeColor: 'bg-slate-600'
+      },
+      {
+        id: 'wonder_woman',
+        title: 'Wonder Woman',
+        icon: 'Star',
+        description: 'Amazon Warrior',
+        prompt: `A realistic photo of the person wearing a red and gold warrior armor with a tiara and bracelets. Standing in an ancient majestic temple. Golden sunlight. Brave and graceful pose. Authentic cosplay style. Your face must be clearly visible, natural, and matching the input photo exactly.`,
+        themeColor: 'bg-red-700'
+      }
+    ]
   },
+
+  // ========== DOLLS & PRINCESSES ==========
   {
-    id: 'ca',
-    title: 'Chartered Accountant',
-    icon: 'TrendingUp',
-    description: 'Master of finance and economy.',
-    prompt: `A financial professional in a formal business suit. Corporate office with desk and windows. Natural office lighting. Professional workplace environment photo.`,
-    themeColor: 'bg-slate-800'
+    id: 'dolls',
+    title: 'Dolls & Princesses',
+    icon: 'Heart',
+    emoji: '👸',
+    characterPreview: '💄 Barbie • ❄️ Elsa • 🧜‍♀️ Mermaid',
+    description: 'Magical & Beautiful',
+    themeColor: 'bg-pink-500',
+    bgGradient: 'from-pink-500 via-fuchsia-500 to-purple-500',
+    options: [
+      {
+        id: 'barbie',
+        title: 'Barbie',
+        icon: 'Heart',
+        description: 'Fashion Icon',
+        prompt: `A natural portrait of the person wearing a stylish pink fashion dress. Standing in a bright, modern room with pink decor. Authentic makeup and hair. Stylish and confident pose. Natural lighting. Realistic photography style. clearly visible face matching the input.`,
+        themeColor: 'bg-pink-500'
+      },
+      {
+        id: 'elsa',
+        title: 'Elsa',
+        icon: 'Snowflake',
+        description: 'Ice Queen',
+        prompt: `A natural portrait of the person wearing a beautiful light blue gown with sequins. Standing in a snowy winter landscape. Natural daylight. Elegant pose. Authentic cosplay style. clearly visible face matching the input.`,
+        themeColor: 'bg-cyan-500'
+      },
+      {
+        id: 'fairy',
+        title: 'Magical Fairy',
+        icon: 'Sparkles',
+        description: 'Forest Magic',
+        prompt: `A natural portrait of the person wearing a floral woodland dress and wearing fairy wings on their back. Standing in a garden or forest. Natural soft lighting. Whimsical pose. Realistic photography style. clearly visible face matching the input.`,
+        themeColor: 'bg-green-500'
+      }
+    ]
   },
+
+  // ========== DEVOTIONAL ==========
   {
-    id: 'lawyer',
-    title: 'Lawyer',
-    icon: 'Gavel',
-    description: 'Defending justice in the courtroom.',
-    prompt: `A lawyer in traditional black advocate's gown. Law office or library with books in background. Indoor office lighting. Professional legal workplace photo.`,
-    themeColor: 'bg-slate-700'
-  },
-  {
-    id: 'custom',
-    title: 'Custom Dream',
-    icon: 'Wand2',
-    description: 'Imagine anything. You describe it.',
-    prompt: '', // Populated by user input
-    themeColor: 'bg-pink-600'
+    id: 'devotional',
+    title: 'Devotional',
+    icon: 'Flower2',
+    emoji: '🙏',
+    characterPreview: '🪈 Krishna • 🏹 Ram',
+    description: 'Divine Blessings',
+    themeColor: 'bg-orange-500',
+    bgGradient: 'from-orange-500 via-amber-500 to-yellow-500',
+    options: [
+      {
+        id: 'krishna',
+        title: 'Lord Krishna',
+        icon: 'Feather',
+        description: 'Divine Flute Player',
+        prompt: `A majestic portrait of the person dressed as a royal king with rich yellow silk robes and heavy golden jewelry. Wearing a crown with a peacock feather over natural dense dark wavy hair. Holding a flute. lush garden background. Natural lighting. Divine but realistic photography style. clearly visible face matching the input.`,
+        themeColor: 'bg-blue-600'
+      },
+      {
+        id: 'ram',
+        title: 'Lord Ram',
+        icon: 'Target',
+        description: 'Maryada Purushottam',
+        prompt: `A majestic portrait of the person dressed as a warrior king in saffron robes and armor pieces. Natural dense dark wavy hair visible under headgear. Holding a bow. Standing in a forest setting with sun rays. Natural lighting. Noble and brave expression. Authentic traditional attire. clearly visible face matching the input.`,
+        themeColor: 'bg-orange-600'
+      },
+      {
+        id: 'ganesha_devotee',
+        title: 'Disguise',
+        icon: 'Gem',
+        description: 'Festive Celebration',
+        prompt: `A natural portrait of the person wearing a grand traditional Indian festive outfit (Sherwani or Kurta). Standing next to a large Ganesha statue. Festive background with flowers. Natural lighting. Folding hands in prayer. Authentic cultural photography. clearly visible face matching the input.`,
+        themeColor: 'bg-red-600'
+      }
+    ]
   }
 ];
+
+
+// Icon mapping
+const iconMap: { [key: string]: React.ComponentType<{ className?: string }> } = {
+  Stethoscope, HardHat, Gavel, Briefcase, ArrowLeft, Download, RefreshCcw, Wand2, Sparkles,
+  Code, Zap, FlaskConical, Rocket, Microscope, Shield, Plane, TrendingUp, Award, Cpu, Target,
+  Wrench, Gamepad2, Video, Palette, Bot, Printer, Camera, ThumbsUp, RotateCcw, Crown, Sword,
+  Flame, Star, Heart, Music, Snowflake, Sun, Moon, Cat, Fish, Bug, Leaf, Mountain, Waves,
+  Gem, Anchor, Book, Users, Flower2, CircleDot, Feather
+};
+
+const getIcon = (name: string) => iconMap[name] || Star;
+
+// ============================================
+// MAIN APP COMPONENT
+// ============================================
 
 const App: React.FC = () => {
   const [appState, setAppState] = useState<AppState>(AppState.ATTRACT);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
 
-  // State for Navigation within Dreams (Nested Menus)
+  // Category and option selection
+  const [selectedCategoryGroup, setSelectedCategoryGroup] = useState<CategoryGroup | null>(null);
   const [selectedCareer, setSelectedCareer] = useState<CareerOption | null>(null);
-  const [activeCategory, setActiveCategory] = useState<CareerOption | null>(null);
 
   const [resultImage, setResultImage] = useState<string | null>(null);
-  const [customPrompt, setCustomPrompt] = useState<string>('');
-  const [leadPhone, setLeadPhone] = useState<string>('');
-  const [leadSubmitted, setLeadSubmitted] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isProcessingComplete, setIsProcessingComplete] = useState<boolean>(false);
 
@@ -274,12 +347,11 @@ const App: React.FC = () => {
 
   const handleCapture = (image: string) => {
     setCapturedImage(image);
-    setAppState(AppState.PHOTO_REVIEW); // Go to review first
+    setAppState(AppState.PHOTO_REVIEW);
   };
 
-  // Photo approval handlers
   const handleApprovePhoto = () => {
-    setAppState(AppState.SELECT_DREAM);
+    setAppState(AppState.SELECT_CATEGORY);
   };
 
   const handleRetakePhoto = () => {
@@ -287,95 +359,77 @@ const App: React.FC = () => {
     setAppState(AppState.CAPTURE);
   };
 
-  const handleSelectCareer = (career: CareerOption) => {
-    if (career.subOptions && career.subOptions.length > 0) {
-      // Enter the sub-menu (e.g., Engineering types)
-      setActiveCategory(career);
-    } else {
-      // It's a leaf node selection
-      setSelectedCareer(career);
-      if (career.id !== 'custom') {
-        startProcessing(career.prompt);
-      }
-    }
+  const handleSelectCategory = (category: CategoryGroup) => {
+    setSelectedCategoryGroup(category);
+    setAppState(AppState.SELECT_DREAM);
+  };
+
+  const handleSelectOption = (option: CareerOption) => {
+    console.log('🎯 [APP] Selected option:', option.title);
+    console.log('🎯 [APP] Option prompt:', option.prompt);
+    console.log('🎯 [APP] Captured image exists:', !!capturedImage);
+    setSelectedCareer(option);
+    startProcessing(option.prompt);
   };
 
   const handleBack = () => {
-    if (activeCategory) {
-      // Go back up one level to main menu
-      setActiveCategory(null);
+    if (appState === AppState.SELECT_DREAM) {
+      setAppState(AppState.SELECT_CATEGORY);
+      setSelectedCategoryGroup(null);
+    } else if (appState === AppState.SELECT_CATEGORY) {
+      setAppState(AppState.PHOTO_REVIEW);
     } else {
-      // Go back to Capture screen
       setAppState(AppState.CAPTURE);
     }
   };
 
-  const handleCustomSubmit = () => {
-    if (selectedCareer && customPrompt) {
-      startProcessing(customPrompt);
-    }
-  };
-
   const startProcessing = async (prompt: string) => {
-    if (!capturedImage) return;
+    console.log('⚙️ [APP] Starting processing with prompt length:', prompt?.length);
+
+    if (!prompt || prompt.length === 0) {
+      console.error('❌ [APP] ERROR: Empty prompt!');
+      setError('No prompt provided for this character');
+      return;
+    }
+
+    if (!capturedImage) {
+      console.error('❌ [APP] ERROR: No captured image!');
+      setError('No photo captured. Please take a photo first.');
+      return;
+    }
 
     setAppState(AppState.PROCESSING);
-    setIsProcessingComplete(false);
     setError(null);
-
+    setIsProcessingComplete(false);
     try {
-      const generatedImage = await transformUserImage(capturedImage, prompt);
-      setResultImage(generatedImage);
-
-      // Visual confirmation that processing is done
+      console.log('⏳ [APP] Calling transformUserImage...');
+      const result = await transformUserImage(capturedImage!, prompt);
+      console.log('✅ [APP] Generation successful! Result length:', result?.length);
+      setResultImage(result);
       setIsProcessingComplete(true);
-
-      // Brief delay to let the user see the success state before showing result
-      setTimeout(() => {
-        setAppState(AppState.RESULT);
-        setIsProcessingComplete(false); // Reset for next time
-      }, 1500);
-
-    } catch (err) {
-      console.error(err);
-      setError("Failed to generate your future self. Please try again.");
+    } catch (err: any) {
+      console.error("❌ [APP] Generation Error:", err);
+      setError(err.message || 'Image generation failed');
       setAppState(AppState.SELECT_DREAM);
     }
   };
 
-  const handleTryAnother = () => {
-    // Reset selection and result, but KEEP capturedImage and leadPhone
-    setResultImage(null);
-    setSelectedCareer(null);
-    setActiveCategory(null);
-    setCustomPrompt('');
-    setLeadSubmitted(false); // Reset this so they can send again if they want
-    setAppState(AppState.SELECT_DREAM);
-  };
-
-  const handleReset = () => {
-    setCapturedImage(null);
-    setResultImage(null);
-    setSelectedCareer(null);
-    setActiveCategory(null); // Reset navigation
-    setCustomPrompt('');
-    setLeadPhone('');
-    setLeadSubmitted(false);
-    setAppState(AppState.ATTRACT);
+  const handleProcessingComplete = () => {
+    setAppState(AppState.RESULT);
   };
 
   const handleDownloadImage = () => {
     if (resultImage) {
       const link = document.createElement('a');
       link.href = resultImage;
-      link.download = `Skylar-Dream-${Date.now()}.jpg`;
+      const safeTitle = selectedCareer?.title.replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'photo';
+      link.download = `FutureFrame-${safeTitle}-${Date.now()}.jpg`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
   };
 
-  // Print functionality for booth
   const handlePrintImage = () => {
     if (resultImage) {
       const printWindow = window.open('', '_blank');
@@ -384,306 +438,303 @@ const App: React.FC = () => {
           <!DOCTYPE html>
           <html>
           <head>
-            <title>Skylar Dream Print</title>
+            <title>Future Frame Print</title>
             <style>
               @media print {
                 @page { margin: 0; size: 4in 6in; }
-                body { margin: 0; }
+                body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: black; }
+                img { max-width: 100%; max-height: 100%; object-fit: contain; }
               }
-              body { 
-                margin: 0; 
-                display: flex; 
-                justify-content: center; 
-                align-items: center;
-                min-height: 100vh;
-                background: #000;
-              }
-              img { 
-                max-width: 100%; 
-                max-height: 100vh; 
-                object-fit: contain;
-              }
-              .print-info {
-                position: absolute;
-                bottom: 10px;
-                text-align: center;
-                width: 100%;
-                color: white;
-                font-family: sans-serif;
-                font-size: 12px;
-              }
+              body { margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #000; flex-direction: column; }
+              img { max-width: 90vw; max-height: 80vh; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+              .print-info { margin-top: 20px; color: #666; font-family: sans-serif; }
             </style>
           </head>
           <body>
-            <img src="${resultImage}" alt="Skylar Dream" />
-            <div class="print-info">Future ${selectedCareer?.title} • Skylar Dreams</div>
+            <img src="${resultImage}" alt="Future Frame" />
+            <div class="print-info">Future ${selectedCareer?.title} • Future Frame</div>
           </body>
           </html>
         `);
         printWindow.document.close();
-        printWindow.onload = () => {
-          printWindow.print();
-        };
+        printWindow.focus();
+        setTimeout(() => printWindow.print(), 500);
       }
     }
   };
 
-  const handleLeadSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!leadPhone.trim()) return;
-
-    // In a real app, send to CRM
-    console.log("Lead Captured:", leadPhone);
-    setLeadSubmitted(true);
+  const handleTryAnother = () => {
+    setResultImage(null);
+    setSelectedCareer(null);
+    setSelectedCategoryGroup(null);
+    setIsProcessingComplete(false);
+    setAppState(AppState.SELECT_CATEGORY);
   };
 
-  // --- Render Helpers ---
-
-  const renderIcon = (iconName: string, className: string) => {
-    switch (iconName) {
-      case 'Stethoscope': return <Stethoscope className={className} />;
-      case 'HardHat': return <HardHat className={className} />;
-      case 'Gavel': return <Gavel className={className} />;
-      case 'Briefcase': return <Briefcase className={className} />;
-      case 'Wand2': return <Wand2 className={className} />;
-      case 'Code': return <Code className={className} />;
-      case 'Zap': return <Zap className={className} />;
-      case 'FlaskConical': return <FlaskConical className={className} />;
-      case 'Rocket': return <Rocket className={className} />;
-      case 'Microscope': return <Microscope className={className} />;
-      case 'Shield': return <Shield className={className} />;
-      case 'Plane': return <Plane className={className} />;
-      case 'TrendingUp': return <TrendingUp className={className} />;
-      case 'Award': return <Award className={className} />;
-      case 'Cpu': return <Cpu className={className} />;
-      case 'Target': return <Target className={className} />;
-      case 'Wrench': return <Wrench className={className} />;
-      case 'Gamepad2': return <Gamepad2 className={className} />;
-      case 'Video': return <Video className={className} />;
-      case 'Bot': return <Bot className={className} />;
-      case 'Palette': return <Palette className={className} />;
-      default: return <GraduationCap className={className} />;
-    }
+  const handleStartOver = () => {
+    setAppState(AppState.ATTRACT);
+    setCapturedImage(null);
+    setResultImage(null);
+    setSelectedCareer(null);
+    setSelectedCategoryGroup(null);
+    setError(null);
+    setIsProcessingComplete(false);
   };
 
-  // --- Main Render ---
+  // ============================================
+  // RENDER FUNCTIONS
+  // ============================================
 
-  return (
-    <div className="w-full min-h-dvh bg-[#0A192F] text-white overflow-x-hidden font-sans pb-safe">
-      {appState === AppState.ATTRACT && <AttractScreen onStart={handleStart} />}
-
-      {appState === AppState.CAPTURE && (
-        <CameraCapture
-          onCapture={handleCapture}
-          onBack={() => setAppState(AppState.ATTRACT)}
-        />
-      )}
-
-      {/* NEW: Photo Review/Approval Screen */}
-      {appState === AppState.PHOTO_REVIEW && capturedImage && (
-        <div className="w-full min-h-dvh flex flex-col items-center justify-center bg-[#0A192F] p-4 pt-safe pb-safe">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl md:text-4xl font-black font-heading text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-white mb-2">
-              PHOTO PREVIEW
-            </h2>
-            <p className="text-slate-300 text-sm md:text-lg">Does this photo look good?</p>
-          </div>
-
-          <div className="relative max-w-[400px] w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20 mb-8">
-            <img
-              src={capturedImage}
-              alt="Captured Preview"
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md px-4">
-            <button
-              onClick={handleRetakePhoto}
-              className="flex-1 py-5 bg-slate-700 hover:bg-slate-600 text-white font-bold text-lg rounded-2xl flex items-center justify-center space-x-3 transition-all active:scale-95 touch-manipulation shadow-lg"
-            >
-              <RotateCcw className="w-6 h-6" />
-              <span>RETAKE</span>
-            </button>
-            <button
-              onClick={handleApprovePhoto}
-              className="flex-[2] py-5 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-[#0A192F] font-black text-xl rounded-2xl flex items-center justify-center space-x-3 transition-all active:scale-95 touch-manipulation shadow-[0_0_30px_rgba(100,255,218,0.4)]"
-            >
-              <ThumbsUp className="w-7 h-7" />
-              <span>LOOKS GOOD!</span>
-            </button>
-          </div>
+  // Category Selection Grid (Main Categories)
+  const renderCategorySelection = () => (
+    <div className="w-full min-h-dvh bg-gradient-to-b from-[#0A192F] via-[#112240] to-[#020c1b] flex flex-col">
+      {/* Header */}
+      <div className="px-4 pt-6 pb-4 flex items-center">
+        <button onClick={handleBack} className="p-2 rounded-full text-white/80 hover:bg-white/10 transition-colors">
+          <ArrowLeft className="w-6 h-6" />
+        </button>
+        <div className="ml-3">
+          <h2 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 animate-pulse">
+            ✨ Choose Your Adventure ✨
+          </h2>
+          <p className="text-white/60 text-sm mt-1">Tap a category to explore characters</p>
         </div>
-      )}
+      </div>
 
-      {appState === AppState.SELECT_DREAM && (
-        <div className="w-full min-h-dvh flex flex-col p-4 md:p-8 pt-safe">
-          <div className="flex items-center mb-6 sticky top-0 top-safe z-20 bg-[#0A192F]/95 backdrop-blur-md py-4 -mx-4 px-4 shadow-sm border-b border-white/5">
-            <button onClick={handleBack} className="p-2 rounded-full hover:bg-white/10 transition-colors touch-manipulation">
-              <ArrowLeft className="w-6 h-6 md:w-8 md:h-8" />
-            </button>
-            <h2 className="text-xl md:text-3xl font-bold ml-3 font-heading text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-white truncate">
-              {activeCategory ? activeCategory.title : "Skylar Dreams"}
-            </h2>
-          </div>
-
-          {error && (
-            <div className="bg-red-500/20 border border-red-500 text-red-200 p-4 rounded-xl mb-6 text-sm md:text-base animate-pulse">
-              {error}
-            </div>
-          )}
-
-          {selectedCareer?.id === 'custom' ? (
-            <div className="flex-1 flex flex-col items-center justify-start max-w-2xl mx-auto w-full space-y-6 animate-in fade-in slide-in-from-bottom-4 mt-2">
-              <h3 className="text-lg md:text-2xl font-bold text-cyan-400 text-center">Describe your dream job</h3>
-              <textarea
-                value={customPrompt}
-                onChange={(e) => setCustomPrompt(e.target.value)}
-                placeholder="e.g. A chef in a high-end futuristic kitchen..."
-                className="w-full h-40 bg-slate-800 border border-slate-600 rounded-xl p-4 text-white focus:ring-2 focus:ring-cyan-500 outline-none resize-none text-base md:text-lg shadow-inner appearance-none"
-                style={{ fontSize: '16px' }} // Prevents iOS zoom
-              />
-              <div className="flex w-full gap-4 mt-auto md:mt-0">
-                <button onClick={() => setSelectedCareer(null)} className="flex-1 py-4 bg-slate-700 hover:bg-slate-600 font-bold rounded-xl transition-colors active:scale-95 touch-manipulation">
-                  Back
-                </button>
-                <button
-                  onClick={handleCustomSubmit}
-                  disabled={!customPrompt.trim()}
-                  className="flex-[2] py-4 bg-cyan-500 hover:bg-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed text-[#0A192F] font-bold text-lg md:text-xl rounded-xl transition-all shadow-[0_0_20px_rgba(100,255,218,0.3)] active:scale-95 touch-manipulation"
-                >
-                  GENERATE
-                </button>
+      {/* Category Grid with staggered animation */}
+      <div className="flex-1 overflow-auto px-4 pb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 max-w-5xl mx-auto">
+          {CATEGORY_GROUPS.map((category, index) => (
+            <button
+              key={category.id}
+              onClick={() => handleSelectCategory(category)}
+              style={{ animationDelay: `${index * 50}ms` }}
+              className={`
+                relative overflow-hidden rounded-2xl p-4 md:p-5 text-left 
+                transition-all duration-300 transform 
+                hover:scale-105 hover:-translate-y-1 hover:shadow-2xl
+                active:scale-95 touch-manipulation 
+                bg-gradient-to-br ${category.bgGradient} 
+                border border-white/20 shadow-lg
+                animate-[fadeInUp_0.5s_ease-out_forwards]
+                group
+              `}
+            >
+              {/* Large Emoji */}
+              <div className="text-4xl md:text-5xl mb-2 group-hover:scale-110 transition-transform duration-300 drop-shadow-lg">
+                {category.emoji || '✨'}
               </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 pb-20 animate-in fade-in zoom-in duration-300">
-              {/* If activeCategory is set, show subOptions, else show main list */}
-              {(activeCategory?.subOptions || CAREER_OPTIONS).map((career) => (
-                <button
-                  key={career.id}
-                  onClick={() => handleSelectCareer(career)}
-                  className={`relative group h-[180px] md:h-[300px] rounded-2xl md:rounded-3xl overflow-hidden glass-panel hover:neon-glow transition-all duration-300 text-left p-4 md:p-6 flex flex-col justify-between border-2 border-transparent hover:border-cyan-400/50 active:scale-[0.98] touch-manipulation`}
-                >
-                  <div className={`absolute top-0 right-0 p-16 md:p-32 bg-gradient-to-br ${career.themeColor} to-transparent opacity-20 rounded-bl-full transform translate-x-4 -translate-y-4 md:translate-x-10 md:-translate-y-10 group-hover:scale-110 transition-transform`}></div>
 
-                  <div className={`w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center bg-white/10 backdrop-blur-md mb-2`}>
-                    {renderIcon(career.icon, "w-5 h-5 md:w-8 md:h-8 text-white")}
-                  </div>
+              {/* Title */}
+              <h3 className="text-white font-bold text-base md:text-lg mb-0.5 drop-shadow-md">
+                {category.title}
+              </h3>
 
-                  <div className="relative z-10">
-                    <h3 className="text-sm md:text-2xl font-bold mb-1 md:mb-2 font-heading leading-tight">{career.title}</h3>
-                    <p className="text-[10px] md:text-sm text-slate-300 opacity-80 line-clamp-2 md:line-clamp-3">{career.description}</p>
-                  </div>
+              {/* Character Preview */}
+              {category.characterPreview && (
+                <p className="text-white/80 text-[10px] md:text-xs font-medium truncate">
+                  {category.characterPreview}
+                </p>
+              )}
 
-                  <div className="hidden md:flex w-full py-3 mt-2 rounded-xl bg-white/5 group-hover:bg-cyan-500 group-hover:text-[#0A192F] items-center justify-center font-bold transition-colors">
-                    {career.subOptions ? 'EXPLORE' : 'SELECT'}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+              {/* Glow effect on hover */}
+              <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-all duration-300 rounded-2xl"></div>
+
+              {/* Decorative elements */}
+              <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
+              <div className="absolute -top-2 -left-2 w-12 h-12 bg-white/5 rounded-full blur-lg"></div>
+
+              {/* Sparkle effect */}
+              <div className="absolute top-2 right-2 text-white/40 text-xs group-hover:text-white/80 transition-colors">
+                <Sparkles className="w-4 h-4" />
+              </div>
+            </button>
+          ))}
         </div>
+      </div>
+    </div>
+  );
+
+  // Option Selection Grid (Within a Category)
+  const renderOptionSelection = () => {
+    if (!selectedCategoryGroup) return null;
+
+    return (
+      <div className={`w-full min-h-dvh bg-gradient-to-b ${selectedCategoryGroup.bgGradient} to-[#020c1b] flex flex-col`}>
+        {/* Header */}
+        <div className="px-4 pt-6 pb-4 flex items-center">
+          <button onClick={handleBack} className="p-2 rounded-full text-white/80 hover:bg-white/10">
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+          <div className="ml-3">
+            <h2 className="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-white">
+              {selectedCategoryGroup.title}
+            </h2>
+            <p className="text-white/60 text-xs">{selectedCategoryGroup.description}</p>
+          </div>
+        </div>
+
+        {/* Options Grid */}
+        <div className="flex-1 overflow-auto px-4 pb-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 max-w-3xl mx-auto">
+            {selectedCategoryGroup.options.map((option) => {
+              const IconComp = getIcon(option.icon);
+              return (
+                <button
+                  key={option.id}
+                  onClick={() => handleSelectOption(option)}
+                  className={`relative overflow-hidden rounded-2xl p-4 text-left transition-all duration-300 transform hover:scale-105 active:scale-95 touch-manipulation bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 shadow-lg`}
+                >
+                  <div className={`w-10 h-10 rounded-xl ${option.themeColor} flex items-center justify-center mb-2`}>
+                    <IconComp className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="text-white font-bold text-sm md:text-base mb-1">{option.title}</h3>
+                  <p className="text-white/60 text-xs">{option.description}</p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Photo Review Screen
+  const renderPhotoReview = () => (
+    <div className="relative w-full h-dvh flex flex-col items-center justify-center bg-black overflow-hidden">
+      {capturedImage && (
+        <img src={capturedImage} alt="Captured" className="absolute inset-0 w-full h-full object-contain" />
       )}
 
-      {appState === AppState.PROCESSING && <ProcessingView isComplete={isProcessingComplete} />}
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 pointer-events-none"></div>
 
-      {appState === AppState.RESULT && resultImage && (
-        <div className="w-full min-h-dvh flex flex-col lg:flex-row bg-[#0A192F] pt-safe pb-safe">
-          {/* Result Image Area */}
-          <div className="flex-1 flex items-center justify-center p-4 md:p-8 bg-black/30 relative min-h-[50vh] lg:h-auto">
-            <div className="relative max-w-[600px] w-full shadow-2xl rounded-sm border-[4px] md:border-[10px] border-white bg-white transform md:rotate-1 hover:rotate-0 transition-transform duration-500">
-              <img src={resultImage} alt="Future Self" className="w-full h-auto block" />
+      <div className="absolute top-6 left-0 right-0 z-20 text-center">
+        <div className="inline-block bg-black/60 px-6 py-2 rounded-full backdrop-blur-md">
+          <p className="text-white text-sm md:text-lg font-medium">Does this photo look good?</p>
+        </div>
+      </div>
 
-              {/* Branding Overlay on Image */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-3 md:p-6 pt-12">
-                <div className="flex justify-between items-end">
+      <div className="absolute bottom-0 w-full pb-safe z-30 bg-gradient-to-t from-black via-black/80 to-transparent">
+        <div className="pb-8 pt-12 flex justify-center items-center gap-6 max-w-lg mx-auto px-6">
+          <button
+            onClick={handleRetakePhoto}
+            className="flex flex-col items-center space-y-2 text-white/90 active:text-white transition-all active:scale-95 touch-manipulation"
+          >
+            <div className="p-4 rounded-full bg-red-600/80 backdrop-blur-md border border-white/10 shadow-lg">
+              <RotateCcw className="w-6 h-6 md:w-8 md:h-8" />
+            </div>
+            <span className="text-xs md:text-sm font-bold tracking-wider uppercase">Retake</span>
+          </button>
+
+          <button
+            onClick={handleApprovePhoto}
+            className="flex flex-col items-center space-y-2 text-white active:scale-95 touch-manipulation"
+          >
+            <div className="p-5 rounded-full bg-green-500 shadow-[0_0_30px_rgba(34,197,94,0.5)] border-4 border-white/30">
+              <ThumbsUp className="w-8 h-8 md:w-10 md:h-10" />
+            </div>
+            <span className="text-sm md:text-base font-bold tracking-wider uppercase">Looks Good!</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Result Screen
+  const renderResult = () => (
+    <div className="relative w-full h-dvh flex flex-col items-center justify-center bg-black overflow-hidden">
+      {resultImage && (
+        <>
+          <img src={resultImage} alt="Result" className="absolute inset-0 w-full h-full object-contain" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/20 pointer-events-none"></div>
+
+          <div className="absolute top-4 left-4 z-20">
+            <button onClick={handleStartOver} className="p-3 rounded-full bg-black/50 backdrop-blur-md text-white hover:bg-black/70 transition-colors">
+              <ArrowLeft className="w-6 h-6" />
+            </button>
+          </div>
+
+          <div className="absolute bottom-4 left-4 right-4 z-20">
+            <div className="max-w-md mx-auto space-y-3">
+              <div className="bg-black/60 backdrop-blur-md rounded-2xl p-4 border border-white/10">
+                <div className="flex justify-between items-end mb-4">
                   <div>
-                    <p className="text-cyan-400 font-bold uppercase tracking-widest text-[10px] md:text-sm shadow-black drop-shadow-md">Future {selectedCareer?.title}</p>
-                    <p className="text-white text-[8px] md:text-xs opacity-90 shadow-black drop-shadow-md">Generated by Skylar Team</p>
+                    <p className="text-cyan-400 font-bold uppercase tracking-widest text-xs md:text-sm">
+                      {selectedCareer?.title}
+                    </p>
+                    <p className="text-white text-[10px] md:text-xs opacity-90">Powered by Future Frame</p>
                   </div>
-                  <div className="w-6 h-6 md:w-12 md:h-12 bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center border border-white/20">
-                    <Sparkles className="w-3 h-3 md:w-6 md:h-6 text-yellow-400" />
+                  <div className="w-8 h-8 md:w-10 md:h-10 bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-yellow-400" />
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* Sidebar / Actions */}
-          <div className="w-full lg:w-[400px] bg-white text-[#0A192F] p-5 md:p-8 flex flex-col justify-center space-y-4 md:space-y-8 shadow-2xl z-10 rounded-t-3xl lg:rounded-none lg:h-auto overflow-y-auto">
-            <div className="text-center lg:text-left pt-2">
-              <h2 className="text-2xl md:text-4xl font-black font-heading mb-1 md:mb-2">IT'S A MATCH!</h2>
-              <p className="text-slate-600 text-xs md:text-base">Your future looks bright. Capture this moment.</p>
-            </div>
-
-            <div className="space-y-3 md:space-y-4">
-              {/* PRIMARY ACTION: Print for Booth */}
+              {/* Action Buttons */}
               <button
                 onClick={handlePrintImage}
-                className="w-full py-5 md:py-6 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-2xl font-black text-xl md:text-2xl flex items-center justify-center space-x-3 hover:from-emerald-400 hover:to-cyan-400 transition-all shadow-lg shadow-emerald-200 transform active:scale-95 duration-200 touch-manipulation"
+                className="w-full py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-lg rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(6,182,212,0.4)] active:scale-95 touch-manipulation transition-all"
               >
-                <Printer className="w-7 h-7 md:w-8 md:h-8" />
-                <span>PRINT THIS!</span>
+                <Printer className="w-6 h-6" />
+                PRINT THIS!
               </button>
 
-              <button
-                onClick={handleDownloadImage}
-                className="w-full py-4 bg-cyan-600 text-white rounded-xl font-bold flex items-center justify-center space-x-2 hover:bg-cyan-700 transition-colors shadow-lg transform active:scale-95 duration-200 touch-manipulation"
-              >
-                <Download className="w-5 h-5 md:w-6 md:h-6" />
-                <span className="text-sm md:text-lg">DOWNLOAD IMAGE</span>
-              </button>
-
-              <div className="p-3 md:p-4 bg-slate-100 rounded-xl border border-slate-200">
-                <h4 className="font-bold mb-2 flex items-center text-xs md:text-sm">
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Get via WhatsApp / Email
-                </h4>
-
-                {leadSubmitted ? (
-                  <div className="flex items-center justify-center space-x-2 py-3 text-green-600 bg-green-50 rounded-lg border border-green-100 animate-in fade-in zoom-in duration-300">
-                    <CheckCircle className="w-5 h-5" />
-                    <span className="font-bold text-sm">Sent successfully!</span>
-                  </div>
-                ) : (
-                  <form onSubmit={handleLeadSubmit} className="flex space-x-2">
-                    <input
-                      type="tel"
-                      placeholder="Mobile Number"
-                      className="flex-1 px-3 py-2 md:px-4 md:py-3 rounded-lg border border-slate-300 focus:border-cyan-500 outline-none text-sm appearance-none"
-                      style={{ fontSize: '16px' }}
-                      value={leadPhone}
-                      onChange={(e) => setLeadPhone(e.target.value)}
-                    />
-                    <button type="submit" className="bg-slate-800 text-white px-3 md:px-4 rounded-lg font-bold hover:bg-slate-700 text-xs md:text-sm active:scale-95 transition-transform touch-manipulation">
-                      SEND
-                    </button>
-                  </form>
-                )}
+              <div className="flex gap-3">
+                <button
+                  onClick={handleTryAnother}
+                  className="flex-1 py-3 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl flex items-center justify-center gap-2 backdrop-blur-md border border-white/20 active:scale-95 touch-manipulation"
+                >
+                  <RefreshCcw className="w-5 h-5" />
+                  Try Another
+                </button>
+                <button
+                  onClick={handleDownloadImage}
+                  className="flex-1 py-3 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl flex items-center justify-center gap-2 backdrop-blur-md border border-white/20 active:scale-95 touch-manipulation"
+                >
+                  <Download className="w-5 h-5" />
+                  Download
+                </button>
               </div>
-
-              {/* TRY ANOTHER - Larger for booth */}
-              <button
-                onClick={handleTryAnother}
-                className="w-full py-5 border-3 border-orange-400 bg-orange-50 text-orange-600 rounded-2xl font-bold text-lg hover:bg-orange-100 transition-colors flex items-center justify-center space-x-2 active:scale-95 touch-manipulation shadow-md"
-              >
-                <LayoutGrid className="w-6 h-6" />
-                <span>TRY ANOTHER DREAM</span>
-              </button>
-
-              <button
-                onClick={handleReset}
-                className="w-full py-3 border-2 border-slate-200 text-slate-500 rounded-xl font-bold hover:bg-slate-50 transition-colors flex items-center justify-center space-x-2 text-sm md:text-base active:scale-95 touch-manipulation"
-              >
-                <RefreshCcw className="w-5 h-5" />
-                <span>START OVER</span>
-              </button>
             </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
 
-            <div className="text-center text-[10px] text-slate-400 font-medium pt-2 pb-6 md:pb-0">
-              Generated by Skylar Team
-            </div>
+  // ============================================
+  // MAIN RENDER
+  // ============================================
+
+  return (
+    <div className="w-full min-h-dvh font-sans">
+      {appState === AppState.ATTRACT && <AttractScreen onStart={handleStart} />}
+
+      {appState === AppState.CAPTURE && (
+        <CameraCapture onCapture={handleCapture} onBack={handleStartOver} />
+      )}
+
+      {appState === AppState.PHOTO_REVIEW && renderPhotoReview()}
+
+      {appState === AppState.SELECT_CATEGORY && renderCategorySelection()}
+
+      {appState === AppState.SELECT_DREAM && renderOptionSelection()}
+
+      {appState === AppState.PROCESSING && (
+        <ProcessingView
+          onComplete={handleProcessingComplete}
+          isActuallyComplete={isProcessingComplete}
+        />
+      )}
+
+      {appState === AppState.RESULT && renderResult()}
+
+      {/* Error Toast */}
+      {error && (
+        <div className="fixed bottom-20 left-4 right-4 z-50">
+          <div className="max-w-md mx-auto bg-red-500/90 backdrop-blur-md text-white px-4 py-3 rounded-xl text-center text-sm">
+            {error}
+            <button onClick={() => setError(null)} className="ml-2 underline">Dismiss</button>
           </div>
         </div>
       )}

@@ -110,7 +110,20 @@ ${promptInstruction}
     const candidates = response.candidates;
 
     if (candidates && candidates.length > 0) {
-      const parts = candidates[0].content.parts;
+      const candidate = candidates[0];
+
+      // Check for safety finish reason
+      if (candidate.finishReason === 'SAFETY' || candidate.finishReason === 'BLOCKLIST') {
+        console.warn(`⚠️ [GEMINI-PROD] Blocked by safety filter: ${candidate.finishReason}`);
+        throw new Error("Generation blocked by safety settings. Please try a different photo.");
+      }
+
+      if (!candidate.content || !candidate.content.parts) {
+        console.error('❌ [GEMINI-PROD] Candidate exists but has no content parts');
+        throw new Error("No image data received from AI.");
+      }
+
+      const parts = candidate.content.parts;
 
       for (const part of parts) {
         if (part.inlineData && part.inlineData.data) {
@@ -140,6 +153,9 @@ ${promptInstruction}
     }
     if (error?.message?.includes('400')) {
       throw new Error("Invalid request. Please try a different photo.");
+    }
+    if (error?.message?.includes('Candidate was blocked due to safety')) {
+      throw new Error("The image generation was blocked by safety filters. Please try a different pose or photo.");
     }
 
     throw error;
